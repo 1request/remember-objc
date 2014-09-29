@@ -10,11 +10,14 @@
 		7C91085F19D8F34300A7EC91 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C91085E19D8F34300A7EC91 /* main.m */; };
 		7C91086219D8F34300A7EC91 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C91086119D8F34300A7EC91 /* AppDelegate.m */; };
 		7C91086519D8F34300A7EC91 /* remember_objc.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7C91086319D8F34300A7EC91 /* remember_objc.xcdatamodeld */; };
-		7C91086819D8F34300A7EC91 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C91086719D8F34300A7EC91 /* ViewController.m */; };
 		7C91086B19D8F34300A7EC91 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7C91086919D8F34300A7EC91 /* Main.storyboard */; };
 		7C91086D19D8F34300A7EC91 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7C91086C19D8F34300A7EC91 /* Images.xcassets */; };
 		7C91087019D8F34300A7EC91 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7C91086E19D8F34300A7EC91 /* LaunchScreen.xib */; };
 		7C91087C19D8F34300A7EC91 /* remember_objcTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C91087B19D8F34300A7EC91 /* remember_objcTests.m */; };
+		7C9108C819D907CD00A7EC91 /* HomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9108C719D907CD00A7EC91 /* HomeTableViewController.m */; };
+		7C9108CB19D90CD300A7EC91 /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9108CA19D90CD300A7EC91 /* StartViewController.m */; };
+		7C9108CE19D90CEE00A7EC91 /* DevicesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9108CD19D90CEE00A7EC91 /* DevicesTableViewController.m */; };
+		7C9108D119D90D0500A7EC91 /* AddDeviceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9108D019D90D0500A7EC91 /* AddDeviceViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,14 +37,20 @@
 		7C91086019D8F34300A7EC91 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		7C91086119D8F34300A7EC91 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		7C91086419D8F34300A7EC91 /* remember_objc.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = remember_objc.xcdatamodel; sourceTree = "<group>"; };
-		7C91086619D8F34300A7EC91 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		7C91086719D8F34300A7EC91 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		7C91086A19D8F34300A7EC91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7C91086C19D8F34300A7EC91 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7C91086F19D8F34300A7EC91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		7C91087519D8F34300A7EC91 /* remember-objcTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "remember-objcTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C91087A19D8F34300A7EC91 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7C91087B19D8F34300A7EC91 /* remember_objcTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = remember_objcTests.m; sourceTree = "<group>"; };
+		7C9108C619D907CD00A7EC91 /* HomeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomeTableViewController.h; path = Controllers/HomeTableViewController.h; sourceTree = "<group>"; };
+		7C9108C719D907CD00A7EC91 /* HomeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomeTableViewController.m; path = Controllers/HomeTableViewController.m; sourceTree = "<group>"; };
+		7C9108C919D90CD300A7EC91 /* StartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StartViewController.h; path = Controllers/StartViewController.h; sourceTree = "<group>"; };
+		7C9108CA19D90CD300A7EC91 /* StartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StartViewController.m; path = Controllers/StartViewController.m; sourceTree = "<group>"; };
+		7C9108CC19D90CEE00A7EC91 /* DevicesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DevicesTableViewController.h; path = Controllers/DevicesTableViewController.h; sourceTree = "<group>"; };
+		7C9108CD19D90CEE00A7EC91 /* DevicesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DevicesTableViewController.m; path = Controllers/DevicesTableViewController.m; sourceTree = "<group>"; };
+		7C9108CF19D90D0500A7EC91 /* AddDeviceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddDeviceViewController.h; path = Controllers/AddDeviceViewController.h; sourceTree = "<group>"; };
+		7C9108D019D90D0500A7EC91 /* AddDeviceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddDeviceViewController.m; path = Controllers/AddDeviceViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,8 +149,14 @@
 		7C9108C519D9007D00A7EC91 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				7C91086619D8F34300A7EC91 /* ViewController.h */,
-				7C91086719D8F34300A7EC91 /* ViewController.m */,
+				7C9108C919D90CD300A7EC91 /* StartViewController.h */,
+				7C9108CA19D90CD300A7EC91 /* StartViewController.m */,
+				7C9108C619D907CD00A7EC91 /* HomeTableViewController.h */,
+				7C9108C719D907CD00A7EC91 /* HomeTableViewController.m */,
+				7C9108CC19D90CEE00A7EC91 /* DevicesTableViewController.h */,
+				7C9108CD19D90CEE00A7EC91 /* DevicesTableViewController.m */,
+				7C9108CF19D90D0500A7EC91 /* AddDeviceViewController.h */,
+				7C9108D019D90D0500A7EC91 /* AddDeviceViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -263,10 +278,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C9108C819D907CD00A7EC91 /* HomeTableViewController.m in Sources */,
 				7C91086219D8F34300A7EC91 /* AppDelegate.m in Sources */,
+				7C9108CB19D90CD300A7EC91 /* StartViewController.m in Sources */,
+				7C9108D119D90D0500A7EC91 /* AddDeviceViewController.m in Sources */,
 				7C91086519D8F34300A7EC91 /* remember_objc.xcdatamodeld in Sources */,
-				7C91086819D8F34300A7EC91 /* ViewController.m in Sources */,
 				7C91085F19D8F34300A7EC91 /* main.m in Sources */,
+				7C9108CE19D90CEE00A7EC91 /* DevicesTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
