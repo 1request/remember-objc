@@ -1,5 +1,5 @@
 //
-//  HomeTableViewController.h
+//  HomeViewController.h
 //  remember-objc
 //
 //  Created by Joseph Cheung on 29/9/14.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HomeTableViewController : UITableViewController
+@interface HomeViewController : UIViewController
 
 @end
