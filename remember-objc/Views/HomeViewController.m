@@ -33,6 +33,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    UIImage *rememberLogo = [UIImage imageNamed:@"Remember-logo"];
+    UIImageView *logoImageView = [[UIImageView alloc] initWithImage:rememberLogo];
+    logoImageView.contentMode = UIViewContentModeScaleAspectFill;
+    
+    self.navigationItem.titleView = logoImageView;
 }
 
 @end
