@@ -11,5 +11,6 @@
 @interface LocationsTableViewCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *locationNameLabel;
+@property (weak, nonatomic) IBOutlet UIButton *radioButton;
 
 @end

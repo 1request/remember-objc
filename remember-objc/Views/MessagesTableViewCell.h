@@ -12,5 +12,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *recordNameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;
+@property (weak, nonatomic) IBOutlet UIView *readCircleView;
 
 @end

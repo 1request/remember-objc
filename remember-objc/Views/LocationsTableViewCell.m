@@ -9,9 +9,6 @@
 #import "LocationsTableViewCell.h"
 
 @interface LocationsTableViewCell ()
-
-@property (weak, nonatomic) IBOutlet UIButton *radioButton;
-
 @end
 
 @implementation LocationsTableViewCell
