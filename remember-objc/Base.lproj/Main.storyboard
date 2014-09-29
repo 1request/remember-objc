@@ -14,6 +14,9 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="barTintColor" red="0.12941176469999999" green="0.6705882353" blue="0.21960784310000001" alpha="0.87" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -57,7 +60,7 @@
             </objects>
             <point key="canvasLocation" x="909" y="136"/>
         </scene>
-        <!--Devices Table View Controller-->
+        <!--Devices-->
         <scene sceneID="jvA-NE-oZu">
             <objects>
                 <tableViewController id="AkE-98-nKt" customClass="DevicesTableViewController" sceneMemberID="viewController">
@@ -94,12 +97,13 @@
                             <outlet property="delegate" destination="AkE-98-nKt" id="J8K-w4-BwG"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Devices" id="qBd-tz-QMM"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dy5-f1-6KE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1647" y="136"/>
         </scene>
-        <!--Add Device View Controller-->
+        <!--Set Device-->
         <scene sceneID="I4O-th-duJ">
             <objects>
                 <viewController id="ekY-og-VoD" customClass="AddDeviceViewController" sceneMemberID="viewController">
@@ -110,8 +114,39 @@
                     <view key="view" contentMode="scaleToFill" id="xcN-7d-kJI">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UbZ-jU-9Ll">
+                                <rect key="frame" x="16" y="72" width="100" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="naming" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="udh-tR-qST">
+                                <rect key="frame" x="16" y="101" width="568" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="udh-tR-qST" secondAttribute="trailing" constant="16" id="8vw-zh-GW8"/>
+                            <constraint firstItem="UbZ-jU-9Ll" firstAttribute="leading" secondItem="xcN-7d-kJI" secondAttribute="leading" constant="16" id="EUR-BF-i8W"/>
+                            <constraint firstItem="udh-tR-qST" firstAttribute="top" secondItem="UbZ-jU-9Ll" secondAttribute="bottom" constant="8" id="HsA-He-47X"/>
+                            <constraint firstItem="udh-tR-qST" firstAttribute="leading" secondItem="xcN-7d-kJI" secondAttribute="leading" constant="16" id="VfM-Fa-UhF"/>
+                            <constraint firstItem="UbZ-jU-9Ll" firstAttribute="top" secondItem="9x7-SU-HdL" secondAttribute="bottom" constant="8" id="lIt-OW-PwX"/>
+                            <constraint firstItem="UbZ-jU-9Ll" firstAttribute="leading" secondItem="udh-tR-qST" secondAttribute="leading" id="sBb-t2-B6u"/>
+                        </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Set Device" id="Jq5-yX-WFz">
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="nU8-dZ-Wvg">
+                            <connections>
+                                <action selector="saveBarButtonItemPressed:" destination="ekY-og-VoD" id="AhX-ff-471"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="deviceNameTextField" destination="udh-tR-qST" id="ae7-GM-zhI"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fZO-jW-ShP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
