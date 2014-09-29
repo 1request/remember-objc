@@ -69,7 +69,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="8ue-Hq-qbS">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="8ue-Hq-qbS" customClass="DevicesTableViewCell">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8ue-Hq-qbS" id="W9A-cj-MXc">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -82,14 +82,32 @@
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                             <connections>
+                                                <action selector="addButtonPressed:" destination="8ue-Hq-qbS" eventType="touchUpInside" id="MVt-2a-yf7"/>
                                                 <segue destination="ekY-og-VoD" kind="show" id="e6q-an-Qy9"/>
                                             </connections>
                                         </button>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6iB-27-kDy">
                                             <rect key="frame" x="8" y="8" width="44" height="44"/>
                                         </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Device range" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4D5-xU-Dnh">
+                                            <rect key="frame" x="60" y="31" width="454" height="21"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Device UUID" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XiK-LK-kL3">
+                                            <rect key="frame" x="60" y="8" width="454" height="23"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="deviceRangeLabel" destination="4D5-xU-Dnh" id="F8e-4m-gSZ"/>
+                                    <outlet property="deviceUUIDLabel" destination="XiK-LK-kL3" id="pL5-eM-Vgo"/>
+                                    <outlet property="ibeaconImageView" destination="6iB-27-kDy" id="jG2-No-m8V"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
