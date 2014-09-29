@@ -10,7 +10,6 @@
 
 @interface LocationsTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *locationNameLabel;
-@property (weak, nonatomic) IBOutlet UIButton *radioButton;
-
+@property (nonatomic, getter=isActive) BOOL active;
+@property (strong, nonatomic) UILabel *locationNameLabel;
 @end
