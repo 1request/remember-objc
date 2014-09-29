@@ -53,50 +53,6 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="messageCell" id="fst-mv-vQl" customClass="MessagesTableViewCell">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fst-mv-vQl" id="ONJ-la-oMF">
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Record Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Ly-Zq-1Nf">
-                                                    <rect key="frame" x="60" y="8" width="475" height="44"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HDb-LD-EJM">
-                                                    <rect key="frame" x="543" y="8" width="49" height="44"/>
-                                                    <state key="normal" title="Button">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="actionButtonPressed:" destination="fst-mv-vQl" eventType="touchUpInside" id="rwX-Mt-sZb"/>
-                                                    </connections>
-                                                </button>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KcE-d1-95B">
-                                                    <rect key="frame" x="8" y="8" width="44" height="44"/>
-                                                    <subviews>
-                                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GFB-IA-vnZ">
-                                                            <rect key="frame" x="14" y="14" width="16" height="16"/>
-                                                            <color key="backgroundColor" red="0.0" green="0.56862745100000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <userDefinedRuntimeAttributes>
-                                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                                    <integer key="value" value="8"/>
-                                                                </userDefinedRuntimeAttribute>
-                                                            </userDefinedRuntimeAttributes>
-                                                        </view>
-                                                    </subviews>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </view>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="actionButton" destination="HDb-LD-EJM" id="vI5-qy-PEG"/>
-                                            <outlet property="readCircleView" destination="KcE-d1-95B" id="1Nv-AC-KWo"/>
-                                            <outlet property="recordNameLabel" destination="0Ly-Zq-1Nf" id="lay-Ey-BR4"/>
-                                        </connections>
-                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>

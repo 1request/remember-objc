@@ -13,6 +13,7 @@
 @interface HomeViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *clickHereImageView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic) NSInteger selectedLocationRowNumber;
 @end
 
 @implementation HomeViewController
@@ -55,16 +56,27 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return 2;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+{    
     LocationsTableViewCell *locationCell = [tableView dequeueReusableCellWithIdentifier:@"locationCell" forIndexPath:indexPath];
-    locationCell.locationNameLabel.text = @"My office";
-    [locationCell setActive:YES];
+    
+    locationCell.locationNameLabel.text = (indexPath.row == 0) ? @"My Office" : @"My Home";
+    NSLog(@"%zd", self.selectedLocationRowNumber);
+    locationCell.active = (indexPath.row == self.selectedLocationRowNumber) ? YES : NO;
     
     return locationCell;
+}
+
+#pragma mark - UITableView Delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == self.selectedLocationRowNumber) return;
+    if (indexPath.row != self.selectedLocationRowNumber) self.selectedLocationRowNumber = indexPath.row;
+    [tableView reloadData];
 }
 
 @end

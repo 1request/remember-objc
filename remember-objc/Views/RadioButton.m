@@ -36,4 +36,10 @@ static CGFloat const OuterCircleStrokeLineWidth = 1;
     [innerCirclePath fill];
 }
 
+- (void)setChecked:(BOOL)checked
+{
+    _checked = checked;
+    [self setNeedsDisplay];
+}
+
 @end
