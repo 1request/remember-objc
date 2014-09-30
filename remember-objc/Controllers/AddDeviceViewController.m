@@ -8,7 +8,7 @@
 
 #import "AddDeviceViewController.h"
 
-@interface AddDeviceViewController ()
+@interface AddDeviceViewController () <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *deviceNameTextField;
 
@@ -17,6 +17,20 @@
 @implementation AddDeviceViewController
 
 - (IBAction)saveBarButtonItemPressed:(UIBarButtonItem *)sender {
+}
+
+#pragma mark - UITextField Delegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
+- (void)setDeviceNameTextField:(UITextField *)deviceNameTextField
+{
+    _deviceNameTextField = deviceNameTextField;
+    _deviceNameTextField.delegate = self;
 }
 
 @end
