@@ -8,10 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, PlayerStatus) {
+    Pause,
+    Play
+};
+
 @interface MessagesTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *recordNameLabel;
-@property (weak, nonatomic) IBOutlet UIButton *actionButton;
-@property (weak, nonatomic) IBOutlet UIView *readCircleView;
+@property (strong, nonatomic) UILabel *messageNameLabel;
+@property (nonatomic, getter=isRead) BOOL read;
+@property PlayerStatus playerStatus;
+@property (strong, nonatomic) UIButton *playerButton;
 
 @end

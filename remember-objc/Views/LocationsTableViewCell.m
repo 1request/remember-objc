@@ -10,15 +10,27 @@
 #import "RadioButton.h"
 
 @interface LocationsTableViewCell ()
+
 @property (strong, nonatomic) RadioButton *radioButton;
+
 @end
+
+static CGFloat const ButtonSize = 24.0;
 
 @implementation LocationsTableViewCell
 
 - (void)awakeFromNib {
     // Initialization code
-    [self.contentView addSubview:self.radioButton];
-    [self.contentView addSubview:self.locationNameLabel];
+}
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self.contentView addSubview:self.radioButton];
+        [self.contentView addSubview:self.locationNameLabel];
+    }
+    return self;
 }
 
 - (void)layoutSubviews
@@ -26,7 +38,7 @@
     [super layoutSubviews];
     self.textLabel.translatesAutoresizingMaskIntoConstraints = NO;
     NSDictionary *elementsDict = @{@"radioButton": self.radioButton, @"locationNameLabel": self.locationNameLabel};
-    NSDictionary *metrics = @{@"buttonSize": @24};
+    NSDictionary *metrics = @{@"buttonSize": [NSNumber numberWithFloat:ButtonSize]};
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.radioButton
                                                                  attribute:NSLayoutAttributeCenterY
                                                                  relatedBy:NSLayoutRelationEqual
@@ -54,11 +66,6 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
-}
-
-- (void)radioButtonPressed:(UIButton *)sender
-{
-    
 }
 
 - (void)setActive:(BOOL)active

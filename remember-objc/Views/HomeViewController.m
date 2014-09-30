@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *clickHereImageView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSInteger selectedLocationRowNumber;
+@property (nonatomic) NSInteger activePlayerRowNumber;
 @end
 
 @implementation HomeViewController
@@ -56,27 +57,91 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{    
-    LocationsTableViewCell *locationCell = [tableView dequeueReusableCellWithIdentifier:@"locationCell" forIndexPath:indexPath];
+{
+    static NSString *CellIdentifier = @"Cell";
+    CGRect cellRect = CGRectMake(0, 0, tableView.frame.size.width, 60);
+    if (indexPath.row == 0) {
+        LocationsTableViewCell *locationCell = (LocationsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (locationCell == nil) {
+            locationCell = [[LocationsTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        }
+        locationCell.frame = cellRect;
+        locationCell.locationNameLabel.text = @"My Office";
+        locationCell.active = (indexPath.row == self.selectedLocationRowNumber) ? YES : NO;
+        return locationCell;
+    }
     
-    locationCell.locationNameLabel.text = (indexPath.row == 0) ? @"My Office" : @"My Home";
-    NSLog(@"%zd", self.selectedLocationRowNumber);
-    locationCell.active = (indexPath.row == self.selectedLocationRowNumber) ? YES : NO;
+    MessagesTableViewCell *messageCell = (MessagesTableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (messageCell == nil) {
+        messageCell = [[MessagesTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    }
+    messageCell.frame = cellRect;
+    messageCell.read = NO;
+    messageCell.messageNameLabel.text = [NSString stringWithFormat:@"Record %zd", indexPath.row];
+    messageCell.playerStatus = (self.activePlayerRowNumber && self.activePlayerRowNumber == indexPath.row) ? Play : Pause;
+    messageCell.playerButton.tag = indexPath.row;
+    [messageCell.playerButton addTarget:self action:@selector(playerButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    return locationCell;
+    return messageCell;
 }
 
 #pragma mark - UITableView Delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if (indexPath.row == self.selectedLocationRowNumber) return;
-    if (indexPath.row != self.selectedLocationRowNumber) self.selectedLocationRowNumber = indexPath.row;
-    [tableView reloadData];
+    if (indexPath.row != self.selectedLocationRowNumber && [cell isKindOfClass:[LocationsTableViewCell class]]) {
+        self.selectedLocationRowNumber = indexPath.row;
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+    }
+}
+
+#pragma mark - helper methods
+
+- (void)playerButtonClicked:(UIButton *)sender
+{
+    NSLog(@"playerButtonClicked at indexpath %zd", sender.tag);
+    NSIndexPath *triggeredCellIndexPath = [NSIndexPath indexPathForRow:sender.tag inSection:0];
+    NSArray *rowsToBeReloaded = (self.activePlayerRowNumber && self.activePlayerRowNumber != sender.tag) ? @[triggeredCellIndexPath, [NSIndexPath indexPathForRow:self.activePlayerRowNumber inSection:0]] : @[triggeredCellIndexPath];
+    
+    if (self.activePlayerRowNumber != sender.tag) {
+        self.activePlayerRowNumber = sender.tag;
+        [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
+    }
+    else {
+        // stop player and update message cell player status to pause
+        self.activePlayerRowNumber = 0;
+        [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
+    }
+}
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self refreshTable];
+}
+
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    [coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+        [self refreshTable];
+    }];
+}
+
+- (void)refreshTable
+{
+    [self.tableView reloadData];
+    UITableViewCellSeparatorStyle separatorStyle = self.tableView.separatorStyle;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.separatorStyle = separatorStyle;
+    [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 0, 0, 0)];
 }
 
 @end

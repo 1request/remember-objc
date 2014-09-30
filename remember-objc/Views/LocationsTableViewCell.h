@@ -12,4 +12,5 @@
 
 @property (nonatomic, getter=isActive) BOOL active;
 @property (strong, nonatomic) UILabel *locationNameLabel;
+
 @end
