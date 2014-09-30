@@ -105,7 +105,6 @@
 
 - (void)playerButtonClicked:(UIButton *)sender
 {
-    NSLog(@"playerButtonClicked at indexpath %zd", sender.tag);
     NSIndexPath *triggeredCellIndexPath = [NSIndexPath indexPathForRow:sender.tag inSection:0];
     NSArray *rowsToBeReloaded = (self.activePlayerRowNumber && self.activePlayerRowNumber != sender.tag) ? @[triggeredCellIndexPath, [NSIndexPath indexPathForRow:self.activePlayerRowNumber inSection:0]] : @[triggeredCellIndexPath];
     

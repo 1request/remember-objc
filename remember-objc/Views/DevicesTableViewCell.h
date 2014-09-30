@@ -10,7 +10,8 @@
 
 @interface DevicesTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *deviceUUIDLabel;
-@property (weak, nonatomic) IBOutlet UILabel *deviceRangeLabel;
-
+@property (strong, nonatomic) UILabel *deviceUUIDLabel;
+@property (strong, nonatomic) UILabel *deviceRangeLabel;
+@property (strong, nonatomic) UIButton *addButton;
+@property (nonatomic, getter=isAdded) BOOL added;
 @end
