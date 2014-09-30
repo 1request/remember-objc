@@ -43,17 +43,17 @@ static CGFloat const ButtonWidth = 80.0;
 {
     [super layoutSubviews];
     
-    if ([self isAdded]) {
-        [self.addButton setTitle:@"Added" forState:UIControlStateNormal];
-        [self.addButton setTitleColor:[UIColor appGreyColor] forState:UIControlStateNormal];
-        self.addButton.enabled = NO;
-    }
-    else {
+    if ([self isNewDevice]) {
         [self.addButton setTitle:@"Add" forState:UIControlStateNormal];
         self.addButton.backgroundColor = [UIColor appGreenColor];
         [self.addButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         self.addButton.layer.cornerRadius = 5;
         self.addButton.clipsToBounds = YES;
+    }
+    else {
+        [self.addButton setTitle:@"Added" forState:UIControlStateNormal];
+        [self.addButton setTitleColor:[UIColor appGreyColor] forState:UIControlStateNormal];
+        self.addButton.enabled = NO;
     }
     
     NSDictionary *elementsDict = @{@"ibeaconImageView":self.ibeaconImageView, @"deviceUUIDLabel":self.deviceUUIDLabel, @"deviceRangeLabel":self.deviceRangeLabel, @"addButton":self.addButton};

@@ -44,14 +44,28 @@
     
     cell.deviceUUIDLabel.text = [uuid substringToIndex:8];
     cell.deviceRangeLabel.text = @"Within 100m";
-    cell.added = (indexPath.row == 0) ? NO : YES;
-    
+    cell.newDevice = (indexPath.row == 0) ? NO : YES;
+    cell.addButton.tag = indexPath.row;
+    if ([cell isNewDevice]) {
+        [cell.addButton addTarget:self action:@selector(addButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+    }
     return cell;
+}
+
+#pragma mark - helper methods
+
+- (void)addButtonClicked:(UIButton *)sender
+{
+    [self performSegueWithIdentifier:@"toAddDevice" sender:sender];
 }
 
 #pragma mark - Navigation
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([sender isKindOfClass:[UIButton class]]) {
+        // pass device detail to add device view controller
+    }
 }
 
 @end

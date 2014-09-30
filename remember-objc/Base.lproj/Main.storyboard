@@ -60,7 +60,7 @@
                     <navigationItem key="navigationItem" id="tqp-kL-KbW">
                         <barButtonItem key="rightBarButtonItem" image="plus" id="Jgx-hN-HaF">
                             <connections>
-                                <segue destination="AkE-98-nKt" kind="show" id="uih-QZ-N7I"/>
+                                <segue destination="AkE-98-nKt" kind="show" identifier="toDevices" id="uih-QZ-N7I"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -88,7 +88,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Devices" id="qBd-tz-QMM"/>
                     <connections>
-                        <segue destination="ekY-og-VoD" kind="show" id="JdB-EN-J31"/>
+                        <segue destination="ekY-og-VoD" kind="show" identifier="toAddDevice" id="JdB-EN-J31"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dy5-f1-6KE" userLabel="First Responder" sceneMemberID="firstResponder"/>
