@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="pPg-m1-mLh">
     <dependencies>
+        <deployment defaultVersion="1808" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -43,14 +45,32 @@
                                 <rect key="frame" x="469" y="64" width="101" height="100"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="pad-zX-x8C">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="465"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tff-Yg-yeP">
+                                <rect key="frame" x="273" y="537" width="55" height="55"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="Tff-Yg-yeP" secondAttribute="height" multiplier="1:1" id="PDn-SC-Gqs"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="record-button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="recordButtonTouchedDown:" destination="Kq8-hk-cFG" eventType="touchDown" id="5GO-ZZ-aBj"/>
+                                    <action selector="recordButtonTouchedDragEnter:" destination="Kq8-hk-cFG" eventType="touchDragEnter" id="J2x-Cn-f4L"/>
+                                    <action selector="recordButtonTouchedDragExit:" destination="Kq8-hk-cFG" eventType="touchDragExit" id="Qb1-KU-IIX"/>
+                                    <action selector="recordButtonTouchedUpInside:" destination="Kq8-hk-cFG" eventType="touchUpInside" id="VYv-L3-FLq"/>
+                                    <action selector="recordButtonTouchedUpOutside:" destination="Kq8-hk-cFG" eventType="touchUpOutside" id="UkB-sh-fwx"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="pad-zX-x8C" firstAttribute="top" secondItem="cwS-yA-PsG" secondAttribute="bottom" id="01i-Fg-Db1"/>
-                            <constraint firstItem="vGQ-wz-TpH" firstAttribute="top" secondItem="pad-zX-x8C" secondAttribute="bottom" id="Jnt-hn-KD2"/>
+                            <constraint firstItem="vGQ-wz-TpH" firstAttribute="top" secondItem="Tff-Yg-yeP" secondAttribute="bottom" constant="8" id="AVE-HW-cbY"/>
+                            <constraint firstAttribute="centerX" secondItem="Tff-Yg-yeP" secondAttribute="centerX" id="HM6-Cv-sOe"/>
+                            <constraint firstItem="Tff-Yg-yeP" firstAttribute="top" secondItem="pad-zX-x8C" secondAttribute="bottom" constant="8" id="OCn-ev-1dF"/>
                             <constraint firstItem="pad-zX-x8C" firstAttribute="leading" secondItem="r0Y-5P-pF0" secondAttribute="leading" id="d4t-Zq-5Yg"/>
                             <constraint firstAttribute="trailing" secondItem="pad-zX-x8C" secondAttribute="trailing" id="i4x-8P-LQm"/>
                             <constraint firstItem="hWf-2x-CSb" firstAttribute="top" secondItem="cwS-yA-PsG" secondAttribute="bottom" id="rkz-Wq-D25"/>
@@ -148,5 +168,6 @@
     <resources>
         <image name="click-here-add-device-chinese" width="101" height="100"/>
         <image name="plus" width="12" height="12"/>
+        <image name="record-button" width="53" height="55"/>
     </resources>
 </document>
