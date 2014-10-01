@@ -9,6 +9,10 @@
 #import "HomeViewController.h"
 #import "LocationsTableViewCell.h"
 #import "MessagesTableViewCell.h"
+#import "HUD.h"
+
+static NSString *const slideUpToCancel = @"Slide up to cancel";
+static NSString *const releaseToCancel = @"Release to cancel";
 
 @interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, MessagesTableViewCellDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *clickHereImageView;
@@ -16,6 +20,7 @@
 @property (nonatomic) NSInteger selectedLocationRowNumber;
 @property (nonatomic) NSInteger activePlayerRowNumber;
 @property (strong, nonatomic) NSMutableSet *cellsCurrentlyEditing;
+@property (strong, nonatomic) HUD *hudView;
 @end
 
 @implementation HomeViewController
@@ -131,6 +136,36 @@
         self.activePlayerRowNumber = 0;
         [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
     }
+}
+
+- (IBAction)recordButtonTouchedDown:(id)sender
+{
+    self.hudView = [HUD hudInView:self.view];
+    self.hudView.text = slideUpToCancel;
+}
+
+- (IBAction)recordButtonTouchedUpInside:(id)sender
+{
+    [self.hudView removeFromSuperview];
+    // save audio
+}
+
+- (IBAction)recordButtonTouchedUpOutside:(id)sender
+{
+    [self.hudView removeFromSuperview];
+    // cancel audio
+}
+
+- (IBAction)recordButtonTouchedDragExit:(id)sender
+{
+    self.hudView.text = releaseToCancel;
+    [self.hudView setNeedsDisplay];
+}
+
+- (IBAction)recordButtonTouchedDragEnter:(id)sender
+{
+    self.hudView.text = slideUpToCancel;
+    [self.hudView setNeedsDisplay];
 }
 
 #pragma mark - MessagesTableViewCell Delegate

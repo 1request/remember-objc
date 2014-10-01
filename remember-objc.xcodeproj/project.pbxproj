@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7C28E45E19DBF6B3002D1F69 /* HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C28E45D19DBF6B3002D1F69 /* HUD.m */; };
 		7C91085F19D8F34300A7EC91 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C91085E19D8F34300A7EC91 /* main.m */; };
 		7C91086219D8F34300A7EC91 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C91086119D8F34300A7EC91 /* AppDelegate.m */; };
 		7C91086519D8F34300A7EC91 /* remember_objc.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7C91086319D8F34300A7EC91 /* remember_objc.xcdatamodeld */; };
@@ -36,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7C28E45C19DBF6B3002D1F69 /* HUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HUD.h; path = Views/HUD.h; sourceTree = "<group>"; };
+		7C28E45D19DBF6B3002D1F69 /* HUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HUD.m; path = Views/HUD.m; sourceTree = "<group>"; };
 		7C91085919D8F34300A7EC91 /* remember-objc.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "remember-objc.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C91085D19D8F34300A7EC91 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7C91085E19D8F34300A7EC91 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -156,6 +159,8 @@
 				7CEECE2519DA96FA00302CBA /* UnreadSpotView.m */,
 				7C9108DE19D92D7100A7EC91 /* LocationsTableViewCell.h */,
 				7C9108DF19D92D7100A7EC91 /* LocationsTableViewCell.m */,
+				7C28E45C19DBF6B3002D1F69 /* HUD.h */,
+				7C28E45D19DBF6B3002D1F69 /* HUD.m */,
 				7C9108DB19D92A0400A7EC91 /* MessagesTableViewCell.h */,
 				7C9108DC19D92A0400A7EC91 /* MessagesTableViewCell.m */,
 				7C9108D219D9240D00A7EC91 /* DevicesTableViewCell.h */,
@@ -331,6 +336,7 @@
 				7C91085F19D8F34300A7EC91 /* main.m in Sources */,
 				7C9108E019D92D7100A7EC91 /* LocationsTableViewCell.m in Sources */,
 				7C9108CE19D90CEE00A7EC91 /* DevicesTableViewController.m in Sources */,
+				7C28E45E19DBF6B3002D1F69 /* HUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

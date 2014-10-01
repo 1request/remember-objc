@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="pPg-m1-mLh">
     <dependencies>
+        <deployment defaultVersion="1808" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
@@ -55,6 +56,13 @@
                                 <state key="normal" backgroundImage="record-button">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="recordButtonTouchedDown:" destination="Kq8-hk-cFG" eventType="touchDown" id="5GO-ZZ-aBj"/>
+                                    <action selector="recordButtonTouchedDragEnter:" destination="Kq8-hk-cFG" eventType="touchDragEnter" id="J2x-Cn-f4L"/>
+                                    <action selector="recordButtonTouchedDragExit:" destination="Kq8-hk-cFG" eventType="touchDragExit" id="Qb1-KU-IIX"/>
+                                    <action selector="recordButtonTouchedUpInside:" destination="Kq8-hk-cFG" eventType="touchUpInside" id="VYv-L3-FLq"/>
+                                    <action selector="recordButtonTouchedUpOutside:" destination="Kq8-hk-cFG" eventType="touchUpOutside" id="UkB-sh-fwx"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
