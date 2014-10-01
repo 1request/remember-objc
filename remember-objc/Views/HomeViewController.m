@@ -10,11 +10,12 @@
 #import "LocationsTableViewCell.h"
 #import "MessagesTableViewCell.h"
 
-@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, MessagesTableViewCellDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *clickHereImageView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSInteger selectedLocationRowNumber;
 @property (nonatomic) NSInteger activePlayerRowNumber;
+@property (strong, nonatomic) NSMutableSet *cellsCurrentlyEditing;
 @end
 
 @implementation HomeViewController
@@ -24,7 +25,6 @@
 - (void)setClickHereImageView:(UIImageView *)clickHereImageView
 {
     _clickHereImageView = clickHereImageView;
-//    _clickHereImageView.hidden = [[NSUserDefaults standardUserDefaults] boolForKey:@"isRepeatUser"];
     _clickHereImageView.hidden = YES;
 }
 
@@ -33,7 +33,14 @@
     _tableView = tableView;
     _tableView.delegate = self;
     _tableView.dataSource = self;
-//    _tableView.hidden = ![[NSUserDefaults standardUserDefaults] boolForKey:@"isRepeatUser"];
+}
+
+- (NSMutableSet *)cellsCurrentlyEditing
+{
+    if (!_cellsCurrentlyEditing) {
+        _cellsCurrentlyEditing = [NSMutableSet new];
+    }
+    return _cellsCurrentlyEditing;
 }
 
 #pragma mark - View Lifecycle
@@ -57,36 +64,42 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return 30;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *locationCellIdentifier = @"locationCell";
+    static NSString *messageCellIdentifier = @"messageCell";
     CGRect cellRect = CGRectMake(0, 0, tableView.frame.size.width, 60);
     if (indexPath.row == 0) {
-        LocationsTableViewCell *locationCell = (LocationsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        LocationsTableViewCell *locationCell = (LocationsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:locationCellIdentifier];
         if (locationCell == nil) {
-            locationCell = [[LocationsTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            locationCell = [[LocationsTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:locationCellIdentifier];
         }
         locationCell.frame = cellRect;
         locationCell.locationNameLabel.text = @"My Office";
         locationCell.active = (indexPath.row == self.selectedLocationRowNumber) ? YES : NO;
         return locationCell;
     }
-    
-    MessagesTableViewCell *messageCell = (MessagesTableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (messageCell == nil) {
-        messageCell = [[MessagesTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    else {
+        MessagesTableViewCell *messageCell = (MessagesTableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:messageCellIdentifier];
+        if (messageCell == nil) {
+            messageCell = [[MessagesTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:messageCellIdentifier];
+            messageCell.delegate = self;
+        }
+        messageCell.frame = cellRect;
+        messageCell.read = NO;
+        messageCell.messageNameLabel.text = [NSString stringWithFormat:@"Record %zd", indexPath.row];
+        messageCell.playerStatus = (self.activePlayerRowNumber && self.activePlayerRowNumber == indexPath.row) ? Play : Pause;
+        messageCell.playerButton.tag = indexPath.row;
+        [messageCell.playerButton addTarget:self action:@selector(playerButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        
+        if ([self.cellsCurrentlyEditing containsObject:indexPath]) {
+            [messageCell openCell];
+        }
+        return messageCell;
     }
-    messageCell.frame = cellRect;
-    messageCell.read = NO;
-    messageCell.messageNameLabel.text = [NSString stringWithFormat:@"Record %zd", indexPath.row];
-    messageCell.playerStatus = (self.activePlayerRowNumber && self.activePlayerRowNumber == indexPath.row) ? Play : Pause;
-    messageCell.playerButton.tag = indexPath.row;
-    [messageCell.playerButton addTarget:self action:@selector(playerButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-    
-    return messageCell;
 }
 
 #pragma mark - UITableView Delegate
@@ -119,28 +132,22 @@
     }
 }
 
--(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+#pragma mark - MessagesTableViewCell Delegate
+
+- (void)deleteButtonClicked
 {
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-    [self refreshTable];
+    NSLog(@"in the delegate, clicked delete button");
 }
 
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+- (void)cellDidOpen:(UITableViewCell *)cell
 {
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
-    
-    [coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        [self refreshTable];
-    }];
+    NSIndexPath *currentEditingIndexPath = [self.tableView indexPathForCell:cell];
+    [self.cellsCurrentlyEditing addObject:currentEditingIndexPath];
 }
 
-- (void)refreshTable
+- (void)cellDidClose:(UITableViewCell *)cell
 {
-    [self.tableView reloadData];
-    UITableViewCellSeparatorStyle separatorStyle = self.tableView.separatorStyle;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.separatorStyle = separatorStyle;
-    [self.tableView setSeparatorInset:UIEdgeInsetsMake(0, 0, 0, 0)];
+    [self.cellsCurrentlyEditing removeObject:[self.tableView indexPathForCell:cell]];
 }
 
 @end

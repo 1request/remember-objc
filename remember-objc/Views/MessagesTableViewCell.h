@@ -13,11 +13,20 @@ typedef NS_ENUM(NSUInteger, PlayerStatus) {
     Play
 };
 
-@interface MessagesTableViewCell : UITableViewCell
+@protocol MessagesTableViewCellDelegate <NSObject>
 
+- (void)deleteButtonClicked;
+- (void)cellDidOpen:(UITableViewCell *)cell;
+- (void)cellDidClose:(UITableViewCell *)cell;
+
+@end
+
+
+@interface MessagesTableViewCell : UITableViewCell
+@property (weak, nonatomic) id <MessagesTableViewCellDelegate> delegate;
 @property (strong, nonatomic) UILabel *messageNameLabel;
 @property (nonatomic, getter=isRead) BOOL read;
 @property PlayerStatus playerStatus;
 @property (strong, nonatomic) UIButton *playerButton;
-
+- (void)openCell;
 @end
