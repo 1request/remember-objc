@@ -27,7 +27,6 @@ DerivedData
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 #
 Pods/
-*.lock 
 
 ### OSX ###
 .DS_Store
@@ -51,3 +50,4 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+*.lock
