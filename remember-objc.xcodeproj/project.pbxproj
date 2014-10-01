@@ -24,6 +24,7 @@
 		7C9108EC19D95F1B00A7EC91 /* RadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9108EB19D95F1B00A7EC91 /* RadioButton.m */; };
 		7CEECE1A19DA58E700302CBA /* UIColor+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEECE1919DA58E700302CBA /* UIColor+Extensions.m */; };
 		7CEECE2619DA96FA00302CBA /* UnreadSpotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEECE2519DA96FA00302CBA /* UnreadSpotView.m */; };
+		D1F1F5E519DC60FB001D853F /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1F1F5E419DC60FB001D853F /* Crashlytics.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		7CEECE1919DA58E700302CBA /* UIColor+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+Extensions.m"; path = "Categories/UIColor+Extensions.m"; sourceTree = "<group>"; };
 		7CEECE2419DA96FA00302CBA /* UnreadSpotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnreadSpotView.h; path = Views/UnreadSpotView.h; sourceTree = "<group>"; };
 		7CEECE2519DA96FA00302CBA /* UnreadSpotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UnreadSpotView.m; path = Views/UnreadSpotView.m; sourceTree = "<group>"; };
+		D1F1F5E419DC60FB001D853F /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1F1F5E519DC60FB001D853F /* Crashlytics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,6 +129,7 @@
 		7C91085C19D8F34300A7EC91 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D1F1F5E419DC60FB001D853F /* Crashlytics.framework */,
 				7C91085D19D8F34300A7EC91 /* Info.plist */,
 				7C91085E19D8F34300A7EC91 /* main.m */,
 			);
@@ -218,6 +222,7 @@
 				7C91085619D8F34300A7EC91 /* Frameworks */,
 				7C9108BE19D8FCB000A7EC91 /* ShellScript */,
 				7C91085719D8F34300A7EC91 /* Resources */,
+				D1F1F5E319DC6084001D853F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -317,6 +322,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		D1F1F5E319DC6084001D853F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run a73df0ceadf9f0995f97da85f3a3ca791c3e0de1 bf3ab1034c5cd75609e3800f03579bcde8e8b5508ad8217db336d49533c768c0";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -462,6 +480,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/remember-objc",
+				);
 				INFOPLIST_FILE = "remember-objc/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -474,6 +496,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: STAY REAL LIMITED";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/remember-objc",
+				);
 				INFOPLIST_FILE = "remember-objc/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
