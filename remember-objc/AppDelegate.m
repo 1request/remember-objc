@@ -7,6 +7,8 @@
 //
 
 #import "AppDelegate.h"
+#import <Crashlytics/Crashlytics.h>
+#import <Mixpanel/Mixpanel.h>
 
 @interface AppDelegate ()
 
@@ -16,6 +18,10 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [Crashlytics startWithAPIKey:@"a73df0ceadf9f0995f97da85f3a3ca791c3e0de1"];
+    
+    Mixpanel *mixpanel = [Mixpanel sharedInstanceWithToken:@"3b27052c32a6e7426f27e17b0a1f2e7e"];
+    [mixpanel track:@"Start"];
     
     return YES;
 }
