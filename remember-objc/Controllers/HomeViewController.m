@@ -19,9 +19,10 @@
 static NSString *const slideUpToCancel = @"Slide up to cancel";
 static NSString *const releaseToCancel = @"Release to cancel";
 
-@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, MessagesTableViewCellDelegate>
+@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, MessagesTableViewCellDelegate, NSFetchedResultsControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *clickHereImageView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *recordButton;
 @property (nonatomic) NSInteger selectedLocationRowNumber;
 @property (nonatomic) NSInteger activePlayerRowNumber;
 @property (strong, nonatomic) NSMutableSet *cellsCurrentlyEditing;
@@ -36,7 +37,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 - (void)setClickHereImageView:(UIImageView *)clickHereImageView
 {
     _clickHereImageView = clickHereImageView;
-    _clickHereImageView.hidden = YES;
+//    _clickHereImageView.hidden = YES;
 }
 
 - (void)setTableView:(UITableView *)tableView
@@ -69,6 +70,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
                                                                        managedObjectContext:self.managedObjectContext
                                                                          sectionNameKeyPath:nil
                                                                                   cacheName:nil];
+    self.fetchedResultController.delegate = self;
     NSError *error;
     BOOL success = [self.fetchedResultController performFetch:&error];
     if (!success) NSLog(@"[%@ %@] performFetch: failed", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
@@ -87,6 +89,11 @@ static NSString *const releaseToCancel = @"Release to cancel";
     logoImageView.contentMode = UIViewContentModeScaleAspectFill;
     
     self.navigationItem.titleView = logoImageView;
+    
+    if (![[self.fetchedResultController fetchedObjects] count]) {
+        self.tableView.hidden = YES;
+        self.recordButton.hidden = YES;
+    }
 }
 
 #pragma mark - UITableView Datasource
@@ -228,6 +235,71 @@ static NSString *const releaseToCancel = @"Release to cancel";
         DevicesTableViewController *deviceTableVC = segue.destinationViewController;
         deviceTableVC.managedObjectContext = self.managedObjectContext;
     }
+}
+
+#pragma mark - NSFetchedResultsController Delegate
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    if (self.tableView.hidden) {
+        self.tableView.hidden = NO;
+        self.recordButton.hidden = NO;
+    }
+    
+    [self.tableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller
+  didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex:(NSUInteger)sectionIndex
+     forChangeType:(NSFetchedResultsChangeType)type
+{
+    switch(type)
+    {
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+
+- (void)controller:(NSFetchedResultsController *)controller
+   didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath
+     forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath
+{
+    switch(type)
+    {
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeUpdate:
+            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeMove:
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView endUpdates];
 }
 
 @end
