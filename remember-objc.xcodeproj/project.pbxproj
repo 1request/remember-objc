@@ -24,6 +24,8 @@
 		7CBE3B4F19DCE82400C25A54 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B4E19DCE82400C25A54 /* Location.m */; };
 		7CBE3B5219DCE82500C25A54 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B5119DCE82500C25A54 /* Message.m */; };
 		7CBE3B5519DCE89E00C25A54 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B5419DCE89E00C25A54 /* HomeViewController.m */; };
+		7CBE3B5819DCF26B00C25A54 /* BeaconFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B5719DCF26B00C25A54 /* BeaconFactory.m */; };
+		7CBE3B5A19DCF32300C25A54 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CBE3B5919DCF32300C25A54 /* CoreLocation.framework */; };
 		7CEECE1A19DA58E700302CBA /* UIColor+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEECE1919DA58E700302CBA /* UIColor+Extensions.m */; };
 		7CEECE2619DA96FA00302CBA /* UnreadSpotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEECE2519DA96FA00302CBA /* UnreadSpotView.m */; };
 		BC455FCD549950CEA0A94642 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7491236443D3E8A7E1AE64E /* libPods.a */; };
@@ -75,6 +77,9 @@
 		7CBE3B5119DCE82500C25A54 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = models/Message.m; sourceTree = "<group>"; };
 		7CBE3B5319DCE89E00C25A54 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomeViewController.h; path = Controllers/HomeViewController.h; sourceTree = "<group>"; };
 		7CBE3B5419DCE89E00C25A54 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomeViewController.m; path = Controllers/HomeViewController.m; sourceTree = "<group>"; };
+		7CBE3B5619DCF26B00C25A54 /* BeaconFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BeaconFactory.h; path = Models/BeaconFactory.h; sourceTree = "<group>"; };
+		7CBE3B5719DCF26B00C25A54 /* BeaconFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BeaconFactory.m; path = Models/BeaconFactory.m; sourceTree = "<group>"; };
+		7CBE3B5919DCF32300C25A54 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		7CEECE1819DA58E700302CBA /* UIColor+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+Extensions.h"; path = "Categories/UIColor+Extensions.h"; sourceTree = "<group>"; };
 		7CEECE1919DA58E700302CBA /* UIColor+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+Extensions.m"; path = "Categories/UIColor+Extensions.m"; sourceTree = "<group>"; };
 		7CEECE2419DA96FA00302CBA /* UnreadSpotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnreadSpotView.h; path = Views/UnreadSpotView.h; sourceTree = "<group>"; };
@@ -88,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CBE3B5A19DCF32300C25A54 /* CoreLocation.framework in Frameworks */,
 				D1F1F5E519DC60FB001D853F /* Crashlytics.framework in Frameworks */,
 				BC455FCD549950CEA0A94642 /* libPods.a in Frameworks */,
 			);
@@ -106,6 +112,7 @@
 		58A2B556DEDE6675973D6B5D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7CBE3B5919DCF32300C25A54 /* CoreLocation.framework */,
 				D7491236443D3E8A7E1AE64E /* libPods.a */,
 			);
 			name = Frameworks;
@@ -184,12 +191,12 @@
 				7CEECE2519DA96FA00302CBA /* UnreadSpotView.m */,
 				7C9108DE19D92D7100A7EC91 /* LocationsTableViewCell.h */,
 				7C9108DF19D92D7100A7EC91 /* LocationsTableViewCell.m */,
-				7C28E45C19DBF6B3002D1F69 /* HUD.h */,
-				7C28E45D19DBF6B3002D1F69 /* HUD.m */,
 				7C9108DB19D92A0400A7EC91 /* MessagesTableViewCell.h */,
 				7C9108DC19D92A0400A7EC91 /* MessagesTableViewCell.m */,
 				7C9108D219D9240D00A7EC91 /* DevicesTableViewCell.h */,
 				7C9108D319D9240D00A7EC91 /* DevicesTableViewCell.m */,
+				7C28E45C19DBF6B3002D1F69 /* HUD.h */,
+				7C28E45D19DBF6B3002D1F69 /* HUD.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -202,6 +209,8 @@
 				7CBE3B5119DCE82500C25A54 /* Message.m */,
 				7CBE3B4D19DCE82400C25A54 /* Location.h */,
 				7CBE3B4E19DCE82400C25A54 /* Location.m */,
+				7CBE3B5619DCF26B00C25A54 /* BeaconFactory.h */,
+				7CBE3B5719DCF26B00C25A54 /* BeaconFactory.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -419,6 +428,7 @@
 				7CBE3B5219DCE82500C25A54 /* Message.m in Sources */,
 				7CBE3B5519DCE89E00C25A54 /* HomeViewController.m in Sources */,
 				7CEECE1A19DA58E700302CBA /* UIColor+Extensions.m in Sources */,
+				7CBE3B5819DCF26B00C25A54 /* BeaconFactory.m in Sources */,
 				7CBE3B4F19DCE82400C25A54 /* Location.m in Sources */,
 				7C91085F19D8F34300A7EC91 /* main.m in Sources */,
 				7C9108E019D92D7100A7EC91 /* LocationsTableViewCell.m in Sources */,
