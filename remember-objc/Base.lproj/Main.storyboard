@@ -85,6 +85,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="clickHereImageView" destination="hWf-2x-CSb" id="lbN-n2-gpb"/>
+                        <outlet property="recordButton" destination="Tff-Yg-yeP" id="h5D-tV-jxp"/>
                         <outlet property="tableView" destination="pad-zX-x8C" id="XMn-YP-g7C"/>
                     </connections>
                 </viewController>

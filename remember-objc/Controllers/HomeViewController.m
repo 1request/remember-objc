@@ -11,17 +11,24 @@
 #import "MessagesTableViewCell.h"
 #import "DevicesTableViewController.h"
 #import "HUD.h"
+#import "LocationManager.h"
+#import <CoreData/CoreData.h>
+#import "Location.h"
+#import "Message.h"
 
 static NSString *const slideUpToCancel = @"Slide up to cancel";
 static NSString *const releaseToCancel = @"Release to cancel";
 
-@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, MessagesTableViewCellDelegate>
+@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, MessagesTableViewCellDelegate, NSFetchedResultsControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIImageView *clickHereImageView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *recordButton;
 @property (nonatomic) NSInteger selectedLocationRowNumber;
 @property (nonatomic) NSInteger activePlayerRowNumber;
 @property (strong, nonatomic) NSMutableSet *cellsCurrentlyEditing;
 @property (strong, nonatomic) HUD *hudView;
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultController;
+@property (strong, nonatomic) NSMutableArray *objectsInTable;
 @end
 
 @implementation HomeViewController
@@ -31,7 +38,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 - (void)setClickHereImageView:(UIImageView *)clickHereImageView
 {
     _clickHereImageView = clickHereImageView;
-    _clickHereImageView.hidden = YES;
+//    _clickHereImageView.hidden = YES;
 }
 
 - (void)setTableView:(UITableView *)tableView
@@ -50,6 +57,29 @@ static NSString *const releaseToCancel = @"Release to cancel";
     return _cellsCurrentlyEditing;
 }
 
+- (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    _managedObjectContext = managedObjectContext;
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
+    request.predicate = nil;
+    
+    request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:NO]];
+    
+    [request setRelationshipKeyPathsForPrefetching:@[@"messages"]];
+    
+    self.fetchedResultController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                                       managedObjectContext:self.managedObjectContext
+                                                                         sectionNameKeyPath:nil
+                                                                                  cacheName:nil];
+    self.fetchedResultController.delegate = self;
+    NSError *error;
+    BOOL success = [self.fetchedResultController performFetch:&error];
+    if (!success) NSLog(@"[%@ %@] performFetch: failed", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+    if (error) NSLog(@"[%@ %@] %@ (%@)", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [error localizedDescription], [error localizedFailureReason]);
+    [self setObjectsinTable];
+    [self.tableView reloadData];
+}
+
 #pragma mark - View Lifecycle
 
 - (void)viewDidLoad {
@@ -60,6 +90,37 @@ static NSString *const releaseToCancel = @"Release to cancel";
     logoImageView.contentMode = UIViewContentModeScaleAspectFill;
     
     self.navigationItem.titleView = logoImageView;
+    
+    if (![[self.fetchedResultController fetchedObjects] count]) {
+        self.tableView.hidden = YES;
+        self.recordButton.hidden = YES;
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(enteredRegion:)
+                                                 name:kEnteredBeaconNotificationName
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(exitedRegion:)
+                                                 name:kExitedBeaconNotificationName
+                                               object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                 name:kEnteredBeaconNotificationName
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                 name:kExitedBeaconNotificationName
+                                               object:nil];
 }
 
 #pragma mark - UITableView Datasource
@@ -71,7 +132,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    return self.objectsInTable.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -79,13 +140,14 @@ static NSString *const releaseToCancel = @"Release to cancel";
     static NSString *locationCellIdentifier = @"locationCell";
     static NSString *messageCellIdentifier = @"messageCell";
     CGRect cellRect = CGRectMake(0, 0, tableView.frame.size.width, 60);
-    if (indexPath.row == 0) {
+    if ([[self.objectsInTable objectAtIndex:indexPath.row] isKindOfClass:[Location class]]) {
         LocationsTableViewCell *locationCell = (LocationsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:locationCellIdentifier];
         if (locationCell == nil) {
             locationCell = [[LocationsTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:locationCellIdentifier];
         }
         locationCell.frame = cellRect;
-        locationCell.locationNameLabel.text = @"My Office";
+        Location *location = [self.fetchedResultController objectAtIndexPath:indexPath];
+        locationCell.locationNameLabel.text = location.name;
         locationCell.active = (indexPath.row == self.selectedLocationRowNumber) ? YES : NO;
         return locationCell;
     }
@@ -117,7 +179,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
     if (indexPath.row == self.selectedLocationRowNumber) return;
     if (indexPath.row != self.selectedLocationRowNumber && [cell isKindOfClass:[LocationsTableViewCell class]]) {
         self.selectedLocationRowNumber = indexPath.row;
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView reloadData];
     }
 }
 
@@ -169,6 +231,44 @@ static NSString *const releaseToCancel = @"Release to cancel";
     [self.hudView setNeedsDisplay];
 }
 
+- (NSMutableArray *)objectsInTable
+{
+    if (!_objectsInTable) {
+        _objectsInTable = [NSMutableArray new];
+    }
+    return _objectsInTable;
+}
+
+- (void)setObjectsinTable
+{
+    [self.objectsInTable removeAllObjects];
+    NSArray *fetchedLocations = [self.fetchedResultController fetchedObjects];
+    for (Location *location in fetchedLocations) {
+        [self.objectsInTable addObject:location];
+        for (Message *message in location.messages) {
+            [self.objectsInTable addObject:message];
+        }
+    }
+}
+
+- (void)enteredRegion:(NSNotification *)notification
+{
+    NSLog(@"entered region: %@", notification.userInfo);
+    CLBeaconRegion *region = [notification.userInfo objectForKey:@"region"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uuid == %@ AND major == %@ AND minor == %@", region.proximityUUID.UUIDString, region.major, region.minor];
+    NSArray *filteredLocations = [[self.fetchedResultController fetchedObjects] filteredArrayUsingPredicate:predicate];
+    if (filteredLocations.count) {
+        Location *location = filteredLocations.firstObject;
+        location.updatedAt = [NSDate date];
+        [self.managedObjectContext save:NULL];
+    }
+}
+
+- (void)exitedRegion:(NSNotification *)notification
+{
+    NSLog(@"exited region: %@", notification.userInfo);
+}
+
 #pragma mark - MessagesTableViewCell Delegate
 
 - (void)deleteButtonClicked
@@ -195,6 +295,48 @@ static NSString *const releaseToCancel = @"Release to cancel";
         DevicesTableViewController *deviceTableVC = segue.destinationViewController;
         deviceTableVC.managedObjectContext = self.managedObjectContext;
     }
+}
+
+#pragma mark - NSFetchedResultsController Delegate
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    if (self.tableView.hidden) {
+        self.tableView.hidden = NO;
+        self.recordButton.hidden = NO;
+    }
+}
+
+- (void)controller:(NSFetchedResultsController *)controller
+  didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex:(NSUInteger)sectionIndex
+     forChangeType:(NSFetchedResultsChangeType)type
+{
+    switch(type)
+    {
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+
+- (void)controller:(NSFetchedResultsController *)controller
+   didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath
+     forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath
+{
+    [self.fetchedResultController performFetch:NULL];
+    [self setObjectsinTable];
+    [self.tableView reloadData];
 }
 
 @end

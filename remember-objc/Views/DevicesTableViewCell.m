@@ -118,6 +118,9 @@ static CGFloat const ButtonWidth = 80.0;
     if (!_deviceRangeLabel) {
         _deviceRangeLabel = [UILabel new];
         _deviceRangeLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        UIFont *font = _deviceRangeLabel.font;
+        _deviceRangeLabel.font = [font fontWithSize:14.0f];
+        _deviceRangeLabel.textColor = [UIColor appGreyColor];
     }
     return _deviceRangeLabel;
 }

@@ -9,19 +9,63 @@
 #import "DevicesTableViewController.h"
 #import "DevicesTableViewCell.h"
 #import "AddDeviceViewController.h"
+#import "LocationManager.h"
+#import "BeaconFactory.h"
+#import "Location.h"
 
 @interface DevicesTableViewController ()
-
+@property (strong, nonatomic) NSMutableArray *rangedBeacons;
+@property (strong, nonatomic) NSArray *locations;
 @end
 
 @implementation DevicesTableViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
+    
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    [[LocationManager sharedInstance] startRangingBeaconRegions:[BeaconFactory beaconsRegionsToBeRangedForNewDevices]];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(rangedBeacons:)
+                                                 name:kRangedBeaconsNotificationName
+                                               object:nil];
+}
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [[LocationManager sharedInstance] stopRangingBeaconRegions:[BeaconFactory beaconsRegionsToBeRangedForNewDevices]];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:kRangedBeaconsNotificationName
+                                                  object:nil];
+}
+
+- (NSMutableArray *)rangedBeacons
+{
+    if (!_rangedBeacons) {
+        _rangedBeacons = [[NSMutableArray alloc] init];
+    }
+    return _rangedBeacons;
+}
+
+- (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    _managedObjectContext = managedObjectContext;
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
+    request.fetchBatchSize = 20;
+    NSError *error = nil;
+    self.locations = [_managedObjectContext executeFetchRequest:request error:&error];
+}
 
 #pragma mark - Table view data source
 
@@ -30,7 +74,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 2;
+    return [self.rangedBeacons count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -43,11 +87,17 @@
         cell = [[DevicesTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    NSString *uuid = @"E2C56DB5-DFFB-48D2-B060-D0F5A71096E0";
+    CLBeacon *beacon = [self.rangedBeacons objectAtIndex:indexPath.row];
+    NSString *uuid = [beacon.proximityUUID UUIDString];
     
     cell.deviceUUIDLabel.text = [uuid substringToIndex:8];
-    cell.deviceRangeLabel.text = @"Within 100m";
-    cell.newDevice = (indexPath.row == 0) ? NO : YES;
+    cell.deviceRangeLabel.text = [NSString stringWithFormat:@"Within %.2fm", beacon.accuracy];
+
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uuid == %@ AND major == %@ AND minor == %@", beacon.proximityUUID.UUIDString, beacon.major, beacon.minor];
+    
+    NSArray *filteredLocations = [self.locations filteredArrayUsingPredicate:predicate];
+    
+    cell.newDevice = ([filteredLocations count]) ? NO : YES;
     cell.addButton.tag = indexPath.row;
     if ([cell isNewDevice]) {
         [cell.addButton addTarget:self action:@selector(addButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -70,8 +120,27 @@
         if ([segue.destinationViewController isKindOfClass:[AddDeviceViewController class]]) {
             AddDeviceViewController *addDeviceVC = segue.destinationViewController;
             addDeviceVC.managedObjectContext = self.managedObjectContext;
+            UIButton *button = sender;
+            addDeviceVC.beacon = [self.rangedBeacons objectAtIndex:button.tag];
         }
     }
+}
+
+#pragma mark - LocationManager Delegate
+
+- (void)rangedBeacons:(NSNotification *)notification
+{
+    NSUInteger count = [self.rangedBeacons count];
+    
+    for (CLBeacon *beacon in notification.userInfo[@"beacons"]) {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"proximityUUID.UUIDString == %@ AND major == %@ AND minor == %@", beacon.proximityUUID.UUIDString, beacon.major, beacon.minor];
+        NSArray *filteredArray = [self.rangedBeacons filteredArrayUsingPredicate:predicate];
+        if (![filteredArray count]) {
+            [self.rangedBeacons addObject:beacon];
+        }
+    }
+    
+    if ([self.rangedBeacons count] > count) [self.tableView reloadData];
 }
 
 @end
