@@ -20,10 +20,34 @@
 
 @implementation DevicesTableViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
+    
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
     [[LocationManager sharedInstance] startRangingBeaconRegions:[BeaconFactory beaconsRegionsToBeRangedForNewDevices]];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(rangedBeacons:)
+                                                 name:kRangedBeaconsNotificationName
+                                               object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [[LocationManager sharedInstance] stopRangingBeaconRegions:[BeaconFactory beaconsRegionsToBeRangedForNewDevices]];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:kRangedBeaconsNotificationName
+                                                  object:nil];
 }
 
 - (NSMutableArray *)rangedBeacons
@@ -41,12 +65,6 @@
     request.fetchBatchSize = 20;
     NSError *error = nil;
     self.locations = [_managedObjectContext executeFetchRequest:request error:&error];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [[LocationManager sharedInstance] stopRangingBeaconRegions:[BeaconFactory beaconsRegionsToBeRangedForNewDevices]];
 }
 
 #pragma mark - Table view data source
@@ -110,11 +128,11 @@
 
 #pragma mark - LocationManager Delegate
 
-- (void)rangedBeacons:(NSArray *)beacons InRegion:(CLBeaconRegion *)region
+- (void)rangedBeacons:(NSNotification *)notification
 {
     NSUInteger count = [self.rangedBeacons count];
     
-    for (CLBeacon *beacon in beacons) {
+    for (CLBeacon *beacon in notification.userInfo[@"beacons"]) {
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"proximityUUID.UUIDString == %@ AND major == %@ AND minor == %@", beacon.proximityUUID.UUIDString, beacon.major, beacon.minor];
         NSArray *filteredArray = [self.rangedBeacons filteredArrayUsingPredicate:predicate];
         if (![filteredArray count]) {
