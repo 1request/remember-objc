@@ -10,7 +10,8 @@
 #import <Crashlytics/Crashlytics.h>
 #import <Mixpanel/Mixpanel.h>
 #import "HomeViewController.h"
-
+#import "LocationManager.h"
+#import "Location+CLBeaconRegion.h"
 @interface AppDelegate ()
 
 @end
@@ -27,6 +28,8 @@
     UINavigationController *nav = (UINavigationController *)self.window.rootViewController;
     HomeViewController *homeViewController = (HomeViewController *)nav.topViewController;
     homeViewController.managedObjectContext = self.managedObjectContext;
+    
+    [self monitorLocations];
     
     return YES;
 }
@@ -109,6 +112,24 @@
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
+    }
+}
+
+#pragma mark - helper methods
+
+- (void)monitorLocations
+{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
+    NSError *error;
+    NSArray *locations = [self.managedObjectContext executeFetchRequest:request error:&error];
+    if (!error) {
+        NSMutableSet *beaconRegions = [NSMutableSet new];
+        for (Location *location in locations) {
+            [beaconRegions addObject:[location beaconRegion]];
+        }
+        [[LocationManager sharedInstance] startMonitoringBeaconRegions:beaconRegions];
+        [[LocationManager sharedInstance] startRangingBeaconRegions:beaconRegions];
+        NSLog(@"monitored regions: %@", [[LocationManager sharedInstance].manager monitoredRegions]);
     }
 }
 

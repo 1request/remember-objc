@@ -49,7 +49,7 @@
 }
 
 
-- (void)startRangingBeaconRegions:(NSArray *)beaconRegions
+- (void)startRangingBeaconRegions:(NSSet *)beaconRegions
 {
     if (![CLLocationManager isRangingAvailable]) {
         NSLog(@"Couldn't turn on region ranging: Region ranging is not available for this device.");
@@ -61,10 +61,29 @@
     }
 }
 
-- (void)stopRangingBeaconRegions:(NSArray *)beaconRegions
+- (void)stopRangingBeaconRegions:(NSSet *)beaconRegions
 {
     for (CLBeaconRegion *region in beaconRegions) {
         [self.manager stopRangingBeaconsInRegion:region];
+    }
+}
+
+- (void)startMonitoringBeaconRegions:(NSSet *)beaconRegions
+{
+    if (![CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]]) {
+        NSLog(@"Couldn't turn on region ranging: Region ranging is not available for this device.");
+        return;
+    }
+    
+    for (CLBeaconRegion *region in beaconRegions) {
+        [self.manager startMonitoringForRegion:region];
+    }
+}
+
+- (void)stopMonitoringBeaconRegions:(NSSet *)beaconRegions
+{
+    for (CLBeaconRegion *region in beaconRegions) {
+        [self.manager stopMonitoringForRegion:region];
     }
 }
 
@@ -89,9 +108,8 @@
 
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
-    
-    if (self.delegate) {
-        if ([beacons count]) [self.delegate rangedBeacons:beacons InRegion:region];
+    if (beacons.count) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kRangedBeaconsNotificationName object:nil userInfo:@{@"beacons": beacons}];
     }
 }
 
@@ -99,10 +117,8 @@
 {
     if ([region isKindOfClass:[CLBeaconRegion class]]) {
         CLBeaconRegion *beaconRegion = (CLBeaconRegion *)region;
-        if (self.delegate) {
-            if (beaconRegion.major && beaconRegion.minor) {
-                [self.delegate enteredBeaconRegion:beaconRegion];
-            }
+        if (beaconRegion.major && beaconRegion.minor) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kEnteredBeaconNotificationName object:nil userInfo:@{@"region": region}];
         }
     }
 }
@@ -111,10 +127,8 @@
 {
     if ([region isKindOfClass:[CLBeaconRegion class]]) {
         CLBeaconRegion *beaconRegion = (CLBeaconRegion *)region;
-        if (self.delegate) {
-            if (beaconRegion.major && beaconRegion.minor) {
-                [self.delegate exitedBeaconRegion:beaconRegion];
-            }
+        if (beaconRegion.major && beaconRegion.minor) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kExitedBeaconNotificationName object:nil userInfo:@{@"region": region}];
         }
     }
 }
@@ -132,6 +146,5 @@
         NSLog(@"%@", message);
     }
 }
-
 
 @end

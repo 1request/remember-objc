@@ -9,22 +9,16 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
-@protocol LocationManagerDelegate <NSObject>
-
-@optional
-- (void)enteredBeaconRegion:(CLBeaconRegion *)beaconRegion;
-- (void)exitedBeaconRegion:(CLBeaconRegion *)beaconRegion;
-- (void)rangedBeacons:(NSArray *)beacons InRegion:(CLBeaconRegion *)region;
-
-@end
-
 @interface LocationManager : NSObject <CLLocationManagerDelegate>
 
-@property (weak, nonatomic) id <LocationManagerDelegate> delegate;
-
 + (LocationManager *)sharedInstance;
+
 @property (readonly) CLLocationManager *manager;
 
-- (void)startRangingBeaconRegions:(NSArray *)beaconRegions;
-- (void)stopRangingBeaconRegions:(NSArray *)beaconRegions;
+- (void)startRangingBeaconRegions:(NSSet *)beaconRegions;
+- (void)stopRangingBeaconRegions:(NSSet *)beaconRegions;
+
+- (void)startMonitoringBeaconRegions:(NSSet *)beaconRegions;
+- (void)stopMonitoringBeaconRegions:(NSSet *)beaconRegions;
+
 @end
