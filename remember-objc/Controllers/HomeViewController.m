@@ -28,6 +28,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 @property (strong, nonatomic) NSMutableSet *cellsCurrentlyEditing;
 @property (strong, nonatomic) HUD *hudView;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultController;
+@property (strong, nonatomic) NSMutableArray *objectsInTable;
 @end
 
 @implementation HomeViewController
@@ -75,7 +76,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
     BOOL success = [self.fetchedResultController performFetch:&error];
     if (!success) NSLog(@"[%@ %@] performFetch: failed", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
     if (error) NSLog(@"[%@ %@] %@ (%@)", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [error localizedDescription], [error localizedFailureReason]);
-    
+    [self setObjectsinTable];
     [self.tableView reloadData];
 }
 
@@ -96,6 +97,20 @@ static NSString *const releaseToCancel = @"Release to cancel";
     }
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(enteredRegion:)
+                                                 name:kEnteredBeaconNotificationName
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(exitedRegion:)
+                                                 name:kExitedBeaconNotificationName
+                                               object:nil];
+}
+
 #pragma mark - UITableView Datasource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -105,12 +120,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSArray *fetchedLocations = [self.fetchedResultController fetchedObjects];
-    NSInteger messagesCount = 0;
-    for (Location *location in fetchedLocations) {
-        messagesCount += [location.messages count];
-    }
-    return [fetchedLocations count] + messagesCount;
+    return self.objectsInTable.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -118,7 +128,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
     static NSString *locationCellIdentifier = @"locationCell";
     static NSString *messageCellIdentifier = @"messageCell";
     CGRect cellRect = CGRectMake(0, 0, tableView.frame.size.width, 60);
-    if (indexPath.row == 0) {
+    if ([[self.objectsInTable objectAtIndex:indexPath.row] isKindOfClass:[Location class]]) {
         LocationsTableViewCell *locationCell = (LocationsTableViewCell *)[tableView dequeueReusableCellWithIdentifier:locationCellIdentifier];
         if (locationCell == nil) {
             locationCell = [[LocationsTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:locationCellIdentifier];
@@ -157,7 +167,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
     if (indexPath.row == self.selectedLocationRowNumber) return;
     if (indexPath.row != self.selectedLocationRowNumber && [cell isKindOfClass:[LocationsTableViewCell class]]) {
         self.selectedLocationRowNumber = indexPath.row;
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView reloadData];
     }
 }
 
@@ -209,6 +219,43 @@ static NSString *const releaseToCancel = @"Release to cancel";
     [self.hudView setNeedsDisplay];
 }
 
+- (NSMutableArray *)objectsInTable
+{
+    if (!_objectsInTable) {
+        _objectsInTable = [NSMutableArray new];
+    }
+    return _objectsInTable;
+}
+
+- (void)setObjectsinTable
+{
+    NSArray *fetchedLocations = [self.fetchedResultController fetchedObjects];
+    for (Location *location in fetchedLocations) {
+        [self.objectsInTable addObject:location];
+        for (Message *message in location.messages) {
+            [self.objectsInTable addObject:message];
+        }
+    }
+}
+
+- (void)enteredRegion:(NSNotification *)notification
+{
+    NSLog(@"entered region: %@", notification.userInfo);
+    CLBeaconRegion *region = [notification.userInfo objectForKey:@"region"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uuid == %@ AND major == %@ AND minor == %@", region.proximityUUID.UUIDString, region.major, region.minor];
+    NSArray *filteredLocations = [[self.fetchedResultController fetchedObjects] filteredArrayUsingPredicate:predicate];
+    if (filteredLocations.count) {
+        Location *location = filteredLocations.firstObject;
+        location.updatedAt = [NSDate date];
+        [self.managedObjectContext save:NULL];
+    }
+}
+
+- (void)exitedRegion:(NSNotification *)notification
+{
+    NSLog(@"exited region: %@", notification.userInfo);
+}
+
 #pragma mark - MessagesTableViewCell Delegate
 
 - (void)deleteButtonClicked
@@ -245,8 +292,6 @@ static NSString *const releaseToCancel = @"Release to cancel";
         self.tableView.hidden = NO;
         self.recordButton.hidden = NO;
     }
-    
-    [self.tableView beginUpdates];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller
@@ -276,30 +321,8 @@ static NSString *const releaseToCancel = @"Release to cancel";
      forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-    switch(type)
-    {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-    }
-}
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    [self.tableView endUpdates];
+    [self.fetchedResultController performFetch:NULL];
+    [self.tableView reloadData];
 }
 
 @end
