@@ -8,6 +8,7 @@
 
 #import "DevicesTableViewController.h"
 #import "DevicesTableViewCell.h"
+#import "AddDeviceViewController.h"
 
 @interface DevicesTableViewController ()
 
@@ -66,7 +67,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([sender isKindOfClass:[UIButton class]]) {
-        // pass device detail to add device view controller
+        if ([segue.destinationViewController isKindOfClass:[AddDeviceViewController class]]) {
+            AddDeviceViewController *addDeviceVC = segue.destinationViewController;
+            addDeviceVC.managedObjectContext = self.managedObjectContext;
+        }
     }
 }
 

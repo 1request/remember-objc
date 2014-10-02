@@ -9,6 +9,7 @@
 #import "HomeViewController.h"
 #import "LocationsTableViewCell.h"
 #import "MessagesTableViewCell.h"
+#import "DevicesTableViewController.h"
 #import "HUD.h"
 
 static NSString *const slideUpToCancel = @"Slide up to cancel";
@@ -184,6 +185,16 @@ static NSString *const releaseToCancel = @"Release to cancel";
 - (void)cellDidClose:(UITableViewCell *)cell
 {
     [self.cellsCurrentlyEditing removeObject:[self.tableView indexPathForCell:cell]];
+}
+
+#pragma mark - navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.destinationViewController isKindOfClass:[DevicesTableViewController class]]) {
+        DevicesTableViewController *deviceTableVC = segue.destinationViewController;
+        deviceTableVC.managedObjectContext = self.managedObjectContext;
+    }
 }
 
 @end
