@@ -7,7 +7,6 @@
 //
 
 #import "LocationManager.h"
-#import "BeaconFactory.h"
 
 @interface LocationManager ()
 
@@ -50,21 +49,21 @@
 }
 
 
-- (void)startRangingForNewDevices
+- (void)startRangingBeaconRegions:(NSArray *)beaconRegions
 {
     if (![CLLocationManager isRangingAvailable]) {
         NSLog(@"Couldn't turn on region ranging: Region ranging is not available for this device.");
         return;
     }
     
-    for (CLBeaconRegion *region in [BeaconFactory beaconsRegionsToBeRangedForNewDevices]) {
+    for (CLBeaconRegion *region in beaconRegions) {
         [self.manager startRangingBeaconsInRegion:region];
     }
 }
 
-- (void)stopRangingForNewDevices
+- (void)stopRangingBeaconRegions:(NSArray *)beaconRegions
 {
-    for (CLBeaconRegion *region in [BeaconFactory beaconsRegionsToBeRangedForNewDevices]) {
+    for (CLBeaconRegion *region in beaconRegions) {
         [self.manager stopRangingBeaconsInRegion:region];
     }
 }

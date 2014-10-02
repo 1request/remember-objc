@@ -25,6 +25,6 @@
 + (LocationManager *)sharedInstance;
 @property (readonly) CLLocationManager *manager;
 
-- (void)startRangingForNewDevices;
-- (void)stopRangingForNewDevices;
+- (void)startRangingBeaconRegions:(NSArray *)beaconRegions;
+- (void)stopRangingBeaconRegions:(NSArray *)beaconRegions;
 @end

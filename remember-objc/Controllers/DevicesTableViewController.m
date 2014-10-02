@@ -10,6 +10,7 @@
 #import "DevicesTableViewCell.h"
 #import "AddDeviceViewController.h"
 #import "LocationManager.h"
+#import "BeaconFactory.h"
 #import "Location.h"
 
 @interface DevicesTableViewController () <LocationManagerDelegate>
@@ -23,7 +24,7 @@
     [super viewDidLoad];
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     [LocationManager sharedInstance].delegate = self;
-    [[LocationManager sharedInstance] startRangingForNewDevices];
+    [[LocationManager sharedInstance] startRangingBeaconRegions:[BeaconFactory beaconsRegionsToBeRangedForNewDevices]];
 }
 
 - (NSMutableArray *)rangedBeacons
@@ -47,9 +48,9 @@
 {
     [super viewWillDisappear:animated];
     
-    [[LocationManager sharedInstance] stopRangingForNewDevices];
+    [[LocationManager sharedInstance] stopRangingBeaconRegions:[BeaconFactory beaconsRegionsToBeRangedForNewDevices]];
 }
-
+ 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
