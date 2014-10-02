@@ -26,6 +26,7 @@
 		7CBE3B5519DCE89E00C25A54 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B5419DCE89E00C25A54 /* HomeViewController.m */; };
 		7CBE3B5819DCF26B00C25A54 /* BeaconFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B5719DCF26B00C25A54 /* BeaconFactory.m */; };
 		7CBE3B5A19DCF32300C25A54 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CBE3B5919DCF32300C25A54 /* CoreLocation.framework */; };
+		7CBE3B6319DD0AC000C25A54 /* LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B6219DD0AC000C25A54 /* LocationManager.m */; };
 		7CEECE1A19DA58E700302CBA /* UIColor+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEECE1919DA58E700302CBA /* UIColor+Extensions.m */; };
 		7CEECE2619DA96FA00302CBA /* UnreadSpotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEECE2519DA96FA00302CBA /* UnreadSpotView.m */; };
 		BC455FCD549950CEA0A94642 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7491236443D3E8A7E1AE64E /* libPods.a */; };
@@ -80,6 +81,8 @@
 		7CBE3B5619DCF26B00C25A54 /* BeaconFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BeaconFactory.h; path = Models/BeaconFactory.h; sourceTree = "<group>"; };
 		7CBE3B5719DCF26B00C25A54 /* BeaconFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BeaconFactory.m; path = Models/BeaconFactory.m; sourceTree = "<group>"; };
 		7CBE3B5919DCF32300C25A54 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		7CBE3B6119DD0AC000C25A54 /* LocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocationManager.h; sourceTree = "<group>"; };
+		7CBE3B6219DD0AC000C25A54 /* LocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LocationManager.m; sourceTree = "<group>"; };
 		7CEECE1819DA58E700302CBA /* UIColor+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+Extensions.h"; path = "Categories/UIColor+Extensions.h"; sourceTree = "<group>"; };
 		7CEECE1919DA58E700302CBA /* UIColor+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+Extensions.m"; path = "Categories/UIColor+Extensions.m"; sourceTree = "<group>"; };
 		7CEECE2419DA96FA00302CBA /* UnreadSpotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnreadSpotView.h; path = Views/UnreadSpotView.h; sourceTree = "<group>"; };
@@ -143,11 +146,12 @@
 			children = (
 				7C91086019D8F34300A7EC91 /* AppDelegate.h */,
 				7C91086119D8F34300A7EC91 /* AppDelegate.m */,
+				7CBE3B6119DD0AC000C25A54 /* LocationManager.h */,
+				7CBE3B6219DD0AC000C25A54 /* LocationManager.m */,
 				7CEECE1619DA58B500302CBA /* Categories */,
 				7C9108C419D9006D00A7EC91 /* Models */,
 				7C9108C319D9006900A7EC91 /* Views */,
 				7C9108C519D9007D00A7EC91 /* Controllers */,
-				7C91086E19D8F34300A7EC91 /* LaunchScreen.xib */,
 				7CEECE1719DA58BF00302CBA /* Resources */,
 				7C91085C19D8F34300A7EC91 /* Supporting Files */,
 			);
@@ -184,6 +188,7 @@
 		7C9108C319D9006900A7EC91 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7C91086E19D8F34300A7EC91 /* LaunchScreen.xib */,
 				7C91086919D8F34300A7EC91 /* Main.storyboard */,
 				7C9108EA19D95F1B00A7EC91 /* RadioButton.h */,
 				7C9108EB19D95F1B00A7EC91 /* RadioButton.m */,
@@ -434,6 +439,7 @@
 				7CEECE2619DA96FA00302CBA /* UnreadSpotView.m in Sources */,
 				7C9108DD19D92A0400A7EC91 /* MessagesTableViewCell.m in Sources */,
 				7CBE3B5219DCE82500C25A54 /* Message.m in Sources */,
+				7CBE3B6319DD0AC000C25A54 /* LocationManager.m in Sources */,
 				7CBE3B5519DCE89E00C25A54 /* HomeViewController.m in Sources */,
 				7CEECE1A19DA58E700302CBA /* UIColor+Extensions.m in Sources */,
 				7CBE3B5819DCF26B00C25A54 /* BeaconFactory.m in Sources */,

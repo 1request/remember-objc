@@ -11,6 +11,10 @@
 #import "MessagesTableViewCell.h"
 #import "DevicesTableViewController.h"
 #import "HUD.h"
+#import "LocationManager.h"
+#import <CoreData/CoreData.h>
+#import "Location.h"
+#import "Message.h"
 
 static NSString *const slideUpToCancel = @"Slide up to cancel";
 static NSString *const releaseToCancel = @"Release to cancel";
@@ -22,6 +26,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 @property (nonatomic) NSInteger activePlayerRowNumber;
 @property (strong, nonatomic) NSMutableSet *cellsCurrentlyEditing;
 @property (strong, nonatomic) HUD *hudView;
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultController;
 @end
 
 @implementation HomeViewController
@@ -50,6 +55,28 @@ static NSString *const releaseToCancel = @"Release to cancel";
     return _cellsCurrentlyEditing;
 }
 
+- (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
+    _managedObjectContext = managedObjectContext;
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
+    request.predicate = nil;
+    
+    request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"updatedAt" ascending:NO]];
+    
+    [request setRelationshipKeyPathsForPrefetching:@[@"messages"]];
+    
+    self.fetchedResultController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                                       managedObjectContext:self.managedObjectContext
+                                                                         sectionNameKeyPath:nil
+                                                                                  cacheName:nil];
+    NSError *error;
+    BOOL success = [self.fetchedResultController performFetch:&error];
+    if (!success) NSLog(@"[%@ %@] performFetch: failed", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+    if (error) NSLog(@"[%@ %@] %@ (%@)", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [error localizedDescription], [error localizedFailureReason]);
+    
+    [self.tableView reloadData];
+}
+
 #pragma mark - View Lifecycle
 
 - (void)viewDidLoad {
@@ -71,7 +98,12 @@ static NSString *const releaseToCancel = @"Release to cancel";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    NSArray *fetchedLocations = [self.fetchedResultController fetchedObjects];
+    NSInteger messagesCount = 0;
+    for (Location *location in fetchedLocations) {
+        messagesCount += [location.messages count];
+    }
+    return [fetchedLocations count] + messagesCount;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -85,7 +117,8 @@ static NSString *const releaseToCancel = @"Release to cancel";
             locationCell = [[LocationsTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:locationCellIdentifier];
         }
         locationCell.frame = cellRect;
-        locationCell.locationNameLabel.text = @"My Office";
+        Location *location = [self.fetchedResultController objectAtIndexPath:indexPath];
+        locationCell.locationNameLabel.text = location.name;
         locationCell.active = (indexPath.row == self.selectedLocationRowNumber) ? YES : NO;
         return locationCell;
     }

@@ -17,7 +17,7 @@ static NSString *const kEstimoteUUID = @"B9407F30-F5F8-466E-AFF9-25556B57FE6D";
 
 @implementation BeaconFactory
 
-+ (NSArray *)beaconsRegionsToBeRanged
++ (NSArray *)beaconsRegionsToBeRangedForNewDevices
 {
     static NSString *const kBeaconNameKey = @"name";
     static NSString *const kBeaconUUIDKey = @"uuid";
@@ -29,7 +29,8 @@ static NSString *const kEstimoteUUID = @"B9407F30-F5F8-466E-AFF9-25556B57FE6D";
     NSMutableArray *beaconRegions = [NSMutableArray new];
     
     for (NSDictionary *beaconDetail in uuidStrings) {
-        CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beaconDetail[kBeaconUUIDKey] identifier:kBeaconNameKey];
+        CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:beaconDetail[kBeaconUUIDKey]]
+                                                                          identifier:beaconDetail[kBeaconNameKey]];
         [beaconRegions addObject:beaconRegion];
     }
     return [beaconRegions copy];

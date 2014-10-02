@@ -10,6 +10,6 @@
 
 @interface BeaconFactory : NSObject
 
-+ (NSArray *)beaconsRegionsToBeRanged;
++ (NSArray *)beaconsRegionsToBeRangedForNewDevices;
 
 @end
