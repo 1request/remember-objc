@@ -111,6 +111,18 @@ static NSString *const releaseToCancel = @"Release to cancel";
                                                object:nil];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                 name:kEnteredBeaconNotificationName
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                 name:kExitedBeaconNotificationName
+                                               object:nil];
+}
+
 #pragma mark - UITableView Datasource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -229,6 +241,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 
 - (void)setObjectsinTable
 {
+    [self.objectsInTable removeAllObjects];
     NSArray *fetchedLocations = [self.fetchedResultController fetchedObjects];
     for (Location *location in fetchedLocations) {
         [self.objectsInTable addObject:location];
@@ -322,6 +335,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     [self.fetchedResultController performFetch:NULL];
+    [self setObjectsinTable];
     [self.tableView reloadData];
 }
 
