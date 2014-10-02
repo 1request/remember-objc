@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <Crashlytics/Crashlytics.h>
 #import <Mixpanel/Mixpanel.h>
+#import "HomeViewController.h"
 
 @interface AppDelegate ()
 
@@ -22,6 +23,10 @@
     
     Mixpanel *mixpanel = [Mixpanel sharedInstanceWithToken:@"3b27052c32a6e7426f27e17b0a1f2e7e"];
     [mixpanel track:@"Start"];
+    
+    UINavigationController *nav = (UINavigationController *)self.window.rootViewController;
+    HomeViewController *homeViewController = (HomeViewController *)nav.topViewController;
+    homeViewController.managedObjectContext = self.managedObjectContext;
     
     return YES;
 }
