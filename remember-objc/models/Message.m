@@ -2,7 +2,7 @@
 //  Message.m
 //  remember-objc
 //
-//  Created by Joseph Cheung on 2/10/14.
+//  Created by Joseph Cheung on 3/10/14.
 //  Copyright (c) 2014 Reque.st. All rights reserved.
 //
 
@@ -12,9 +12,10 @@
 
 @implementation Message
 
-@dynamic read;
 @dynamic createdAt;
 @dynamic name;
+@dynamic read;
+@dynamic updatedAt;
 @dynamic location;
 
 @end
