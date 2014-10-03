@@ -358,6 +358,12 @@ static NSString *const releaseToCancel = @"Release to cancel";
         NSError *error;
         self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:&error];
         if (!error) {
+            if (![message.read boolValue]) {
+                message.read = [NSNumber numberWithBool:YES];
+                [self.managedObjectContext save:&error];
+                if (error) NSLog(@"message read property update error: %@", error.localizedDescription);
+                [self.tableView reloadData];
+            }
             self.player.delegate = self;
             [self.player play];
         }
@@ -396,7 +402,6 @@ static NSString *const releaseToCancel = @"Release to cancel";
         self.activePlayerRowNumber = sender.tag;
         [self playAudio];
         [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
-        
     }
     else {
         // stop player and update message cell player status to pause

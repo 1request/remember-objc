@@ -146,6 +146,7 @@ static CGFloat const kBounceValue = 20.0f;
         default:
             break;
     }
+    if (self.read) self.unreadSpotView.hidden = YES;
 }
 
 - (void)prepareForReuse
