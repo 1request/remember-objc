@@ -21,14 +21,15 @@
 		7C9108DD19D92A0400A7EC91 /* MessagesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9108DC19D92A0400A7EC91 /* MessagesTableViewCell.m */; };
 		7C9108E019D92D7100A7EC91 /* LocationsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9108DF19D92D7100A7EC91 /* LocationsTableViewCell.m */; };
 		7C9108EC19D95F1B00A7EC91 /* RadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9108EB19D95F1B00A7EC91 /* RadioButton.m */; };
-		7CBE3B4F19DCE82400C25A54 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B4E19DCE82400C25A54 /* Location.m */; };
-		7CBE3B5219DCE82500C25A54 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B5119DCE82500C25A54 /* Message.m */; };
 		7CBE3B5519DCE89E00C25A54 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B5419DCE89E00C25A54 /* HomeViewController.m */; };
 		7CBE3B5819DCF26B00C25A54 /* BeaconFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B5719DCF26B00C25A54 /* BeaconFactory.m */; };
 		7CBE3B5A19DCF32300C25A54 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CBE3B5919DCF32300C25A54 /* CoreLocation.framework */; };
 		7CBE3B6319DD0AC000C25A54 /* LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B6219DD0AC000C25A54 /* LocationManager.m */; };
 		7CBE3B6919DD7FAD00C25A54 /* Constant.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B6819DD7FAD00C25A54 /* Constant.m */; };
 		7CBE3B6D19DD934800C25A54 /* Location+CLBeaconRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B6C19DD934800C25A54 /* Location+CLBeaconRegion.m */; };
+		7CECFB1A19DE327C001884E5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CECFB1919DE327C001884E5 /* AVFoundation.framework */; };
+		7CECFB1D19DE4573001884E5 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CECFB1C19DE4573001884E5 /* Location.m */; };
+		7CECFB2019DE4574001884E5 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CECFB1F19DE4574001884E5 /* Message.m */; };
 		7CEECE1A19DA58E700302CBA /* UIColor+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEECE1919DA58E700302CBA /* UIColor+Extensions.m */; };
 		7CEECE2619DA96FA00302CBA /* UnreadSpotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEECE2519DA96FA00302CBA /* UnreadSpotView.m */; };
 		BC455FCD549950CEA0A94642 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7491236443D3E8A7E1AE64E /* libPods.a */; };
@@ -74,10 +75,6 @@
 		7C9108DF19D92D7100A7EC91 /* LocationsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocationsTableViewCell.m; path = Views/LocationsTableViewCell.m; sourceTree = "<group>"; };
 		7C9108EA19D95F1B00A7EC91 /* RadioButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RadioButton.h; path = Views/RadioButton.h; sourceTree = "<group>"; };
 		7C9108EB19D95F1B00A7EC91 /* RadioButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RadioButton.m; path = Views/RadioButton.m; sourceTree = "<group>"; };
-		7CBE3B4D19DCE82400C25A54 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Location.h; path = models/Location.h; sourceTree = "<group>"; };
-		7CBE3B4E19DCE82400C25A54 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Location.m; path = models/Location.m; sourceTree = "<group>"; };
-		7CBE3B5019DCE82500C25A54 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = models/Message.h; sourceTree = "<group>"; };
-		7CBE3B5119DCE82500C25A54 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = models/Message.m; sourceTree = "<group>"; };
 		7CBE3B5319DCE89E00C25A54 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HomeViewController.h; path = Controllers/HomeViewController.h; sourceTree = "<group>"; };
 		7CBE3B5419DCE89E00C25A54 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HomeViewController.m; path = Controllers/HomeViewController.m; sourceTree = "<group>"; };
 		7CBE3B5619DCF26B00C25A54 /* BeaconFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BeaconFactory.h; path = Models/BeaconFactory.h; sourceTree = "<group>"; };
@@ -90,6 +87,11 @@
 		7CBE3B6A19DD80A600C25A54 /* prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
 		7CBE3B6B19DD934800C25A54 /* Location+CLBeaconRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Location+CLBeaconRegion.h"; path = "models/Location+CLBeaconRegion.h"; sourceTree = "<group>"; };
 		7CBE3B6C19DD934800C25A54 /* Location+CLBeaconRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Location+CLBeaconRegion.m"; path = "models/Location+CLBeaconRegion.m"; sourceTree = "<group>"; };
+		7CECFB1919DE327C001884E5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		7CECFB1B19DE4573001884E5 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Location.h; path = models/Location.h; sourceTree = "<group>"; };
+		7CECFB1C19DE4573001884E5 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Location.m; path = models/Location.m; sourceTree = "<group>"; };
+		7CECFB1E19DE4574001884E5 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = models/Message.h; sourceTree = "<group>"; };
+		7CECFB1F19DE4574001884E5 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = models/Message.m; sourceTree = "<group>"; };
 		7CEECE1819DA58E700302CBA /* UIColor+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+Extensions.h"; path = "Categories/UIColor+Extensions.h"; sourceTree = "<group>"; };
 		7CEECE1919DA58E700302CBA /* UIColor+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+Extensions.m"; path = "Categories/UIColor+Extensions.m"; sourceTree = "<group>"; };
 		7CEECE2419DA96FA00302CBA /* UnreadSpotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnreadSpotView.h; path = Views/UnreadSpotView.h; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7CECFB1A19DE327C001884E5 /* AVFoundation.framework in Frameworks */,
 				7CBE3B5A19DCF32300C25A54 /* CoreLocation.framework in Frameworks */,
 				D1F1F5E519DC60FB001D853F /* Crashlytics.framework in Frameworks */,
 				BC455FCD549950CEA0A94642 /* libPods.a in Frameworks */,
@@ -122,6 +125,7 @@
 		58A2B556DEDE6675973D6B5D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7CECFB1919DE327C001884E5 /* AVFoundation.framework */,
 				7CBE3B5919DCF32300C25A54 /* CoreLocation.framework */,
 				D7491236443D3E8A7E1AE64E /* libPods.a */,
 			);
@@ -220,10 +224,10 @@
 			isa = PBXGroup;
 			children = (
 				7C91086319D8F34300A7EC91 /* remember_objc.xcdatamodeld */,
-				7CBE3B5019DCE82500C25A54 /* Message.h */,
-				7CBE3B5119DCE82500C25A54 /* Message.m */,
-				7CBE3B4D19DCE82400C25A54 /* Location.h */,
-				7CBE3B4E19DCE82400C25A54 /* Location.m */,
+				7CECFB1E19DE4574001884E5 /* Message.h */,
+				7CECFB1F19DE4574001884E5 /* Message.m */,
+				7CECFB1B19DE4573001884E5 /* Location.h */,
+				7CECFB1C19DE4573001884E5 /* Location.m */,
 				7CBE3B6B19DD934800C25A54 /* Location+CLBeaconRegion.h */,
 				7CBE3B6C19DD934800C25A54 /* Location+CLBeaconRegion.m */,
 				7CBE3B5B19DCF74900C25A54 /* Factories */,
@@ -447,17 +451,17 @@
 				7C91086219D8F34300A7EC91 /* AppDelegate.m in Sources */,
 				7CBE3B6D19DD934800C25A54 /* Location+CLBeaconRegion.m in Sources */,
 				7C9108EC19D95F1B00A7EC91 /* RadioButton.m in Sources */,
+				7CECFB1D19DE4573001884E5 /* Location.m in Sources */,
 				7C9108D119D90D0500A7EC91 /* AddDeviceViewController.m in Sources */,
 				7C91086519D8F34300A7EC91 /* remember_objc.xcdatamodeld in Sources */,
 				7CEECE2619DA96FA00302CBA /* UnreadSpotView.m in Sources */,
 				7C9108DD19D92A0400A7EC91 /* MessagesTableViewCell.m in Sources */,
+				7CECFB2019DE4574001884E5 /* Message.m in Sources */,
 				7CBE3B6919DD7FAD00C25A54 /* Constant.m in Sources */,
-				7CBE3B5219DCE82500C25A54 /* Message.m in Sources */,
 				7CBE3B6319DD0AC000C25A54 /* LocationManager.m in Sources */,
 				7CBE3B5519DCE89E00C25A54 /* HomeViewController.m in Sources */,
 				7CEECE1A19DA58E700302CBA /* UIColor+Extensions.m in Sources */,
 				7CBE3B5819DCF26B00C25A54 /* BeaconFactory.m in Sources */,
-				7CBE3B4F19DCE82400C25A54 /* Location.m in Sources */,
 				7C91085F19D8F34300A7EC91 /* main.m in Sources */,
 				7C9108E019D92D7100A7EC91 /* LocationsTableViewCell.m in Sources */,
 				7C9108CE19D90CEE00A7EC91 /* DevicesTableViewController.m in Sources */,

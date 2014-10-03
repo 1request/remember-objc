@@ -15,7 +15,7 @@ typedef NS_ENUM(NSUInteger, PlayerStatus) {
 
 @protocol MessagesTableViewCellDelegate <NSObject>
 
-- (void)deleteButtonClicked;
+- (void)deleteButtonClicked:(UITableViewCell *)cell;
 - (void)cellDidOpen:(UITableViewCell *)cell;
 - (void)cellDidClose:(UITableViewCell *)cell;
 

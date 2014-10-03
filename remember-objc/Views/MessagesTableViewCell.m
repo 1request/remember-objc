@@ -146,6 +146,7 @@ static CGFloat const kBounceValue = 20.0f;
         default:
             break;
     }
+    if (self.read) self.unreadSpotView.hidden = YES;
 }
 
 - (void)prepareForReuse
@@ -206,7 +207,7 @@ static CGFloat const kBounceValue = 20.0f;
 - (void)buttonClicked:(UIButton *)sender
 {
     if (sender == self.deleteButton) {
-        [self.delegate deleteButtonClicked];
+        [self.delegate deleteButtonClicked:self];
     }
 }
 
