@@ -15,11 +15,13 @@
 #import <CoreData/CoreData.h>
 #import "Location.h"
 #import "Message.h"
+#import <AVFoundation/AVFoundation.h>
 
 static NSString *const slideUpToCancel = @"Slide up to cancel";
 static NSString *const releaseToCancel = @"Release to cancel";
 
-@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, MessagesTableViewCellDelegate, NSFetchedResultsControllerDelegate>
+@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, MessagesTableViewCellDelegate, NSFetchedResultsControllerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate>
+
 @property (weak, nonatomic) IBOutlet UIImageView *clickHereImageView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *recordButton;
@@ -29,9 +31,58 @@ static NSString *const releaseToCancel = @"Release to cancel";
 @property (strong, nonatomic) HUD *hudView;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultController;
 @property (strong, nonatomic) NSMutableArray *objectsInTable;
+@property (strong, nonatomic) AVAudioRecorder *recorder;
+@property (strong, nonatomic) AVAudioPlayer *player;
+@property (strong, nonatomic) NSTimer *timer;
+@property (strong, nonatomic) NSDate *startTime;
+@property (nonatomic) NSTimeInterval timeInterval;
+
 @end
 
 @implementation HomeViewController
+
+#pragma mark - Lazy instantiation
+
+- (NSMutableArray *)objectsInTable
+{
+    if (!_objectsInTable) {
+        _objectsInTable = [NSMutableArray new];
+    }
+    return _objectsInTable;
+}
+
+- (AVAudioRecorder *)recorder
+{
+    if (!_recorder) {
+        NSArray *pathComponents = [NSArray arrayWithObjects:
+                                   [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
+                                   @"memo.m4a",
+                                   nil];
+        
+        NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
+        
+        // Setup audio session
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+        
+        NSError *error;
+        [session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+        
+        // Define the recorder setting
+        NSMutableDictionary *recordSetting = [[NSMutableDictionary alloc] init];
+        
+        [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatMPEG4AAC] forKey:AVFormatIDKey];
+        [recordSetting setValue:[NSNumber numberWithFloat:44100.0] forKey:AVSampleRateKey];
+        [recordSetting setValue:[NSNumber numberWithInt: 2] forKey:AVNumberOfChannelsKey];
+        
+        // Initiate and prepare the recorder
+        _recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:recordSetting error:nil];
+        _recorder.delegate = self;
+        _recorder.meteringEnabled = YES;
+        [_recorder prepareToRecord];
+    }
+    return _recorder;
+}
 
 #pragma mark - UI elements
 
@@ -205,18 +256,23 @@ static NSString *const releaseToCancel = @"Release to cancel";
 {
     self.hudView = [HUD hudInView:self.view];
     self.hudView.text = slideUpToCancel;
+    
+    [self recordAudio];
 }
 
 - (IBAction)recordButtonTouchedUpInside:(id)sender
 {
     [self.hudView removeFromSuperview];
     // save audio
+    [self finishRecordingAudio];
 }
 
 - (IBAction)recordButtonTouchedUpOutside:(id)sender
 {
     [self.hudView removeFromSuperview];
     // cancel audio
+    
+    [self stopRecordingAudio];
 }
 
 - (IBAction)recordButtonTouchedDragExit:(id)sender
@@ -229,14 +285,6 @@ static NSString *const releaseToCancel = @"Release to cancel";
 {
     self.hudView.text = slideUpToCancel;
     [self.hudView setNeedsDisplay];
-}
-
-- (NSMutableArray *)objectsInTable
-{
-    if (!_objectsInTable) {
-        _objectsInTable = [NSMutableArray new];
-    }
-    return _objectsInTable;
 }
 
 - (void)setObjectsinTable
@@ -269,6 +317,74 @@ static NSString *const releaseToCancel = @"Release to cancel";
     NSLog(@"exited region: %@", notification.userInfo);
 }
 
+- (void)recordAudio
+{
+    if (self.player.playing) {
+        [self.player stop];
+    }
+    
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setActive:YES error:NULL];
+    [self.recorder record];
+    
+    self.startTime = [NSDate date];
+    
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0
+                                                  target:self
+                                                selector:@selector(updateTimer)
+                                                userInfo:nil
+                                                 repeats:YES];
+}
+
+- (void)updateTimer
+{
+    self.timeInterval = [[NSDate date] timeIntervalSinceDate:self.startTime];
+}
+
+- (void)finishRecordingAudio
+{
+    [self stopRecordingAudio];
+    
+    if (self.timeInterval > 2) {
+        if ([self fileExistsAtSystemWithFilePathString:@"memo.m4a"]) {
+            NSDate *createTime = [NSDate date];
+            NSArray *pathComponents = [NSArray arrayWithObjects:
+                                       [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
+                                       [NSString stringWithFormat:@"%.0f.m4a", [createTime timeIntervalSince1970]],
+                                       nil];
+            
+            NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
+            
+            [[NSFileManager defaultManager] copyItemAtURL:self.recorder.url toURL:outputFileURL error:nil];
+            NSEntityDescription *entity = [NSEntityDescription entityForName:@"Message" inManagedObjectContext:self.managedObjectContext];
+            Message *message = [[Message alloc] initWithEntity:entity insertIntoManagedObjectContext:self.managedObjectContext];
+            message.createdAt = createTime;
+            message.updatedAt = createTime;
+            message.location = [self.objectsInTable objectAtIndex:self.selectedLocationRowNumber];
+            NSInteger count = [message.location.recordCounter integerValue] + 1;
+            message.name = [NSString stringWithFormat:@"Record %zd", count];
+            message.location.recordCounter = [NSNumber numberWithInteger:count];
+            
+            [self.managedObjectContext save:NULL];
+            
+            [self setObjectsinTable];
+            [self.tableView reloadData];
+        }
+    }
+    else {
+        NSLog(@"Record is too short");
+    }
+    
+    self.timeInterval = 0;
+}
+
+- (void)stopRecordingAudio
+{
+    [self.recorder stop];
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
 #pragma mark - MessagesTableViewCell Delegate
 
 - (void)deleteButtonClicked
@@ -285,6 +401,15 @@ static NSString *const releaseToCancel = @"Release to cancel";
 - (void)cellDidClose:(UITableViewCell *)cell
 {
     [self.cellsCurrentlyEditing removeObject:[self.tableView indexPathForCell:cell]];
+}
+
+- (BOOL)fileExistsAtSystemWithFilePathString:(NSString *)pathString
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *filePath = [documentsPath stringByAppendingPathComponent:pathString];
+    BOOL fileExists = [fileManager fileExistsAtPath:filePath];
+    return fileExists;
 }
 
 #pragma mark - navigation
