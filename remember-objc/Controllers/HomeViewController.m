@@ -61,12 +61,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
         
         NSURL *outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
         
-        // Setup audio session
-        AVAudioSession *session = [AVAudioSession sharedInstance];
-        [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
         
-        NSError *error;
-        [session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
         
         // Define the recorder setting
         NSMutableDictionary *recordSetting = [[NSMutableDictionary alloc] init];
@@ -146,6 +141,8 @@ static NSString *const releaseToCancel = @"Release to cancel";
         self.tableView.hidden = YES;
         self.recordButton.hidden = YES;
     }
+    
+    [self configureAVAudioSession];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -208,9 +205,10 @@ static NSString *const releaseToCancel = @"Release to cancel";
             messageCell = [[MessagesTableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:messageCellIdentifier];
             messageCell.delegate = self;
         }
+        Message *message = [self.objectsInTable objectAtIndex:indexPath.row];
         messageCell.frame = cellRect;
-        messageCell.read = NO;
-        messageCell.messageNameLabel.text = [NSString stringWithFormat:@"Record %zd", indexPath.row];
+        messageCell.read = message.read;
+        messageCell.messageNameLabel.text = message.name;
         messageCell.playerStatus = (self.activePlayerRowNumber && self.activePlayerRowNumber == indexPath.row) ? Play : Pause;
         messageCell.playerButton.tag = indexPath.row;
         [messageCell.playerButton addTarget:self action:@selector(playerButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -236,61 +234,19 @@ static NSString *const releaseToCancel = @"Release to cancel";
 
 #pragma mark - helper methods
 
-- (void)playerButtonClicked:(UIButton *)sender
+- (void)configureAVAudioSession
 {
-    NSIndexPath *triggeredCellIndexPath = [NSIndexPath indexPathForRow:sender.tag inSection:0];
-    NSArray *rowsToBeReloaded = (self.activePlayerRowNumber && self.activePlayerRowNumber != sender.tag) ? @[triggeredCellIndexPath, [NSIndexPath indexPathForRow:self.activePlayerRowNumber inSection:0]] : @[triggeredCellIndexPath];
+    // Setup audio session
+    AVAudioSession *session = [AVAudioSession sharedInstance];
     
-    if (self.activePlayerRowNumber != sender.tag) {
-        if (self.player.isPlaying) {
-            [self.player stop];
-        }
-        self.activePlayerRowNumber = sender.tag;
-        [self playAudio];
-        [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
-
-    }
-    else {
-        // stop player and update message cell player status to pause
-        self.activePlayerRowNumber = 0;
-        [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
-        [self.player stop];
-    }
-}
-
-- (IBAction)recordButtonTouchedDown:(id)sender
-{
-    self.hudView = [HUD hudInView:self.view];
-    self.hudView.text = slideUpToCancel;
+    NSError *error;
     
-    [self recordAudio];
-}
-
-- (IBAction)recordButtonTouchedUpInside:(id)sender
-{
-    [self.hudView removeFromSuperview];
-    // save audio
-    [self finishRecordingAudio];
-}
-
-- (IBAction)recordButtonTouchedUpOutside:(id)sender
-{
-    [self.hudView removeFromSuperview];
-    // cancel audio
+    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
+    if (error) NSLog(@"AVAudioSession error setting category: %@", error.localizedDescription);
     
-    [self stopRecordingAudio];
-}
-
-- (IBAction)recordButtonTouchedDragExit:(id)sender
-{
-    self.hudView.text = releaseToCancel;
-    [self.hudView setNeedsDisplay];
-}
-
-- (IBAction)recordButtonTouchedDragEnter:(id)sender
-{
-    self.hudView.text = slideUpToCancel;
-    [self.hudView setNeedsDisplay];
+    [session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+    
+    if (error) NSLog(@"AVAudioSession error activating: %@", error.localizedDescription);
 }
 
 - (void)setObjectsInTable
@@ -400,9 +356,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
     NSString *path = [self filePathWithString:fileName];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         NSError *error;
-        
-        NSData *audioData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:path]];
-        self.player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
+        self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL fileURLWithPath:path] error:&error];
         if (!error) {
             self.player.delegate = self;
             [self.player play];
@@ -427,11 +381,80 @@ static NSString *const releaseToCancel = @"Release to cancel";
     return [documentsPath stringByAppendingPathComponent:pathString];
 }
 
+#pragma mark - View components actions
+
+- (void)playerButtonClicked:(UIButton *)sender
+{
+    NSIndexPath *triggeredCellIndexPath = [NSIndexPath indexPathForRow:sender.tag inSection:0];
+    NSArray *rowsToBeReloaded = (self.activePlayerRowNumber && self.activePlayerRowNumber != sender.tag) ? @[triggeredCellIndexPath, [NSIndexPath indexPathForRow:self.activePlayerRowNumber inSection:0]] : @[triggeredCellIndexPath];
+    
+    if (self.activePlayerRowNumber != sender.tag) {
+        if (self.player.isPlaying) {
+            [self.player stop];
+            self.player = nil;
+        }
+        self.activePlayerRowNumber = sender.tag;
+        [self playAudio];
+        [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
+        
+    }
+    else {
+        // stop player and update message cell player status to pause
+        self.activePlayerRowNumber = 0;
+        [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
+        [self.player stop];
+    }
+}
+
+- (IBAction)recordButtonTouchedDown:(id)sender
+{
+    self.hudView = [HUD hudInView:self.view];
+    self.hudView.text = slideUpToCancel;
+    
+    [self recordAudio];
+}
+
+- (IBAction)recordButtonTouchedUpInside:(id)sender
+{
+    [self.hudView removeFromSuperview];
+    // save audio
+    [self finishRecordingAudio];
+}
+
+- (IBAction)recordButtonTouchedUpOutside:(id)sender
+{
+    [self.hudView removeFromSuperview];
+    // cancel audio
+    
+    [self stopRecordingAudio];
+}
+
+- (IBAction)recordButtonTouchedDragExit:(id)sender
+{
+    self.hudView.text = releaseToCancel;
+    [self.hudView setNeedsDisplay];
+}
+
+- (IBAction)recordButtonTouchedDragEnter:(id)sender
+{
+    self.hudView.text = slideUpToCancel;
+    [self.hudView setNeedsDisplay];
+}
+
 #pragma mark - MessagesTableViewCell Delegate
 
-- (void)deleteButtonClicked
+- (void)deleteButtonClicked:(UITableViewCell *)cell
 {
-    NSLog(@"in the delegate, clicked delete button");
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    Message *message = [self.objectsInTable objectAtIndex:indexPath.row];
+    [self.managedObjectContext deleteObject:message];
+    
+    NSError *error = nil;
+    
+    if (![self.managedObjectContext save:&error]) {
+        NSLog(@"Unable to save managed object context.");
+        NSLog(@"%@, %@", error, error.localizedDescription);
+    }
 }
 
 - (void)cellDidOpen:(UITableViewCell *)cell
@@ -484,7 +507,6 @@ static NSString *const releaseToCancel = @"Release to cancel";
             break;
     }
 }
-
 
 - (void)controller:(NSFetchedResultsController *)controller
    didChangeObject:(id)anObject

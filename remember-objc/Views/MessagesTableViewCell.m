@@ -206,7 +206,7 @@ static CGFloat const kBounceValue = 20.0f;
 - (void)buttonClicked:(UIButton *)sender
 {
     if (sender == self.deleteButton) {
-        [self.delegate deleteButtonClicked];
+        [self.delegate deleteButtonClicked:self];
     }
 }
 
