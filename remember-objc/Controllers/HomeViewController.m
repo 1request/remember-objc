@@ -194,7 +194,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
             locationCell = [[LocationsTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:locationCellIdentifier];
         }
         locationCell.frame = cellRect;
-        Location *location = [self.fetchedResultController objectAtIndexPath:indexPath];
+        Location *location = [self.objectsInTable objectAtIndex:indexPath.row];
         locationCell.locationNameLabel.text = location.name;
         locationCell.active = (indexPath.row == self.selectedLocationRowNumber) ? YES : NO;
         return locationCell;
@@ -207,7 +207,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
         }
         Message *message = [self.objectsInTable objectAtIndex:indexPath.row];
         messageCell.frame = cellRect;
-        messageCell.read = message.read;
+        messageCell.read = [message.read boolValue];
         messageCell.messageNameLabel.text = message.name;
         messageCell.playerStatus = (self.activePlayerRowNumber && self.activePlayerRowNumber == indexPath.row) ? Play : Pause;
         messageCell.playerButton.tag = indexPath.row;
