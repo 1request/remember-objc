@@ -127,7 +127,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
     BOOL success = [self.fetchedResultController performFetch:&error];
     if (!success) NSLog(@"[%@ %@] performFetch: failed", NSStringFromClass([self class]), NSStringFromSelector(_cmd));
     if (error) NSLog(@"[%@ %@] %@ (%@)", NSStringFromClass([self class]), NSStringFromSelector(_cmd), [error localizedDescription], [error localizedFailureReason]);
-    [self setObjectsinTable];
+    [self setObjectsInTable];
     [self.tableView reloadData];
 }
 
@@ -242,13 +242,19 @@ static NSString *const releaseToCancel = @"Release to cancel";
     NSArray *rowsToBeReloaded = (self.activePlayerRowNumber && self.activePlayerRowNumber != sender.tag) ? @[triggeredCellIndexPath, [NSIndexPath indexPathForRow:self.activePlayerRowNumber inSection:0]] : @[triggeredCellIndexPath];
     
     if (self.activePlayerRowNumber != sender.tag) {
+        if (self.player.isPlaying) {
+            [self.player stop];
+        }
         self.activePlayerRowNumber = sender.tag;
+        [self playAudio];
         [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
+
     }
     else {
         // stop player and update message cell player status to pause
         self.activePlayerRowNumber = 0;
         [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
+        [self.player stop];
     }
 }
 
@@ -287,13 +293,15 @@ static NSString *const releaseToCancel = @"Release to cancel";
     [self.hudView setNeedsDisplay];
 }
 
-- (void)setObjectsinTable
+- (void)setObjectsInTable
 {
     [self.objectsInTable removeAllObjects];
     NSArray *fetchedLocations = [self.fetchedResultController fetchedObjects];
     for (Location *location in fetchedLocations) {
         [self.objectsInTable addObject:location];
-        for (Message *message in location.messages) {
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES];
+        NSArray *sortedMessages = [location.messages sortedArrayUsingDescriptors:@[sortDescriptor]];
+        for (Message *message in sortedMessages) {
             [self.objectsInTable addObject:message];
         }
     }
@@ -367,7 +375,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
             
             [self.managedObjectContext save:NULL];
             
-            [self setObjectsinTable];
+            [self setObjectsInTable];
             [self.tableView reloadData];
         }
     }
@@ -383,6 +391,40 @@ static NSString *const releaseToCancel = @"Release to cancel";
     [self.recorder stop];
     [self.timer invalidate];
     self.timer = nil;
+}
+
+- (void)playAudio
+{
+    Message *message = [self.objectsInTable objectAtIndex:self.activePlayerRowNumber];
+    NSString *fileName = [NSString stringWithFormat:@"%.0f.m4a", [message.createdAt timeIntervalSince1970]];
+    NSString *path = [self filePathWithString:fileName];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        NSError *error;
+        
+        NSData *audioData = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:path]];
+        self.player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
+        if (!error) {
+            self.player.delegate = self;
+            [self.player play];
+        }
+        else {
+            NSLog(@"play audio error: %@", error.localizedDescription);
+        }
+    }
+}
+
+- (BOOL)fileExistsAtSystemWithFilePathString:(NSString *)pathString
+{
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *filePath = [self filePathWithString:pathString];
+    BOOL fileExists = [fileManager fileExistsAtPath:filePath];
+    return fileExists;
+}
+
+- (NSString *)filePathWithString:(NSString *)pathString
+{
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    return [documentsPath stringByAppendingPathComponent:pathString];
 }
 
 #pragma mark - MessagesTableViewCell Delegate
@@ -401,15 +443,6 @@ static NSString *const releaseToCancel = @"Release to cancel";
 - (void)cellDidClose:(UITableViewCell *)cell
 {
     [self.cellsCurrentlyEditing removeObject:[self.tableView indexPathForCell:cell]];
-}
-
-- (BOOL)fileExistsAtSystemWithFilePathString:(NSString *)pathString
-{
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-    NSString *filePath = [documentsPath stringByAppendingPathComponent:pathString];
-    BOOL fileExists = [fileManager fileExistsAtPath:filePath];
-    return fileExists;
 }
 
 #pragma mark - navigation
@@ -460,7 +493,15 @@ static NSString *const releaseToCancel = @"Release to cancel";
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     [self.fetchedResultController performFetch:NULL];
-    [self setObjectsinTable];
+    [self setObjectsInTable];
+    [self.tableView reloadData];
+}
+
+#pragma mark - AVAudioPlayer Delegate
+
+- (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag
+{
+    self.activePlayerRowNumber = 0;
     [self.tableView reloadData];
 }
 
