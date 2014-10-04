@@ -53,17 +53,17 @@ static CGFloat const kBounceValue = 20.0f;
                                                                                  metrics:nil views:topViewDict]];
         
         self.contentViewLeftConstraint = [NSLayoutConstraint constraintWithItem:self.topView
-                                                                      attribute:NSLayoutAttributeLeadingMargin
+                                                                      attribute:NSLayoutAttributeLeading
                                                                       relatedBy:NSLayoutRelationEqual
                                                                          toItem:self.contentView
-                                                                      attribute:NSLayoutAttributeLeadingMargin
+                                                                      attribute:NSLayoutAttributeLeading
                                                                      multiplier:1.0 constant:0.0];
         
         self.contentViewRightConstraint = [NSLayoutConstraint constraintWithItem:self.contentView
-                                                                       attribute:NSLayoutAttributeTrailingMargin
+                                                                       attribute:NSLayoutAttributeTrailing
                                                                        relatedBy:NSLayoutRelationEqual
                                                                           toItem:self.topView
-                                                                       attribute:NSLayoutAttributeTrailingMargin
+                                                                       attribute:NSLayoutAttributeTrailing
                                                                       multiplier:1.0 constant:0.0];
         
         [self.contentView addConstraints:@[self.contentViewLeftConstraint, self.contentViewRightConstraint]];

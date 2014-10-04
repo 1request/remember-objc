@@ -29,6 +29,50 @@ static CGFloat const ButtonWidth = 80.0;
         [self.contentView addSubview:self.deviceUUIDLabel];
         [self.contentView addSubview:self.deviceRangeLabel];
         [self.contentView addSubview:self.addButton];
+        
+        NSDictionary *elementsDict = @{@"ibeaconImageView":self.ibeaconImageView, @"deviceUUIDLabel":self.deviceUUIDLabel, @"deviceRangeLabel":self.deviceRangeLabel, @"addButton":self.addButton};
+        NSDictionary *metrics = @{@"buttonWidth":[NSNumber numberWithFloat:ButtonWidth]};
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[ibeaconImageView]-|"
+                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                                 metrics:nil
+                                                                                   views:elementsDict]];
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[deviceUUIDLabel]-[deviceRangeLabel]-|"
+                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                                 metrics:nil
+                                                                                   views:elementsDict]];
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[addButton]-|"
+                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                                 metrics:nil
+                                                                                   views:elementsDict]];
+        
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.ibeaconImageView
+                                                                     attribute:NSLayoutAttributeWidth
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:self.ibeaconImageView
+                                                                     attribute:NSLayoutAttributeHeight
+                                                                    multiplier:1.0
+                                                                      constant:0.0]];
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[ibeaconImageView]-[deviceUUIDLabel]"
+                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                                 metrics:nil
+                                                                                   views:elementsDict]];
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[addButton(buttonWidth)]-|"
+                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                                 metrics:metrics
+                                                                                   views:elementsDict]];
+        
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.deviceRangeLabel
+                                                                     attribute:NSLayoutAttributeLeft
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:self.deviceUUIDLabel
+                                                                     attribute:NSLayoutAttributeLeft
+                                                                    multiplier:1.0
+                                                                      constant:0.0]];
     }
     return self;
 }
@@ -55,50 +99,6 @@ static CGFloat const ButtonWidth = 80.0;
         [self.addButton setTitleColor:[UIColor appGreyColor] forState:UIControlStateNormal];
         self.addButton.enabled = NO;
     }
-    
-    NSDictionary *elementsDict = @{@"ibeaconImageView":self.ibeaconImageView, @"deviceUUIDLabel":self.deviceUUIDLabel, @"deviceRangeLabel":self.deviceRangeLabel, @"addButton":self.addButton};
-    NSDictionary *metrics = @{@"buttonWidth":[NSNumber numberWithFloat:ButtonWidth]};
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[ibeaconImageView]-|"
-                                                                             options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                             metrics:nil
-                                                                               views:elementsDict]];
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[deviceUUIDLabel]-[deviceRangeLabel]-|"
-                                                                             options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                             metrics:nil
-                                                                               views:elementsDict]];
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[addButton]-|"
-                                                                             options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                             metrics:nil
-                                                                               views:elementsDict]];
-    
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.ibeaconImageView
-                                                                 attribute:NSLayoutAttributeWidth
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.ibeaconImageView
-                                                                 attribute:NSLayoutAttributeHeight
-                                                                multiplier:1.0
-                                                                  constant:0.0]];
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[ibeaconImageView]-[deviceUUIDLabel]"
-                                                                             options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                             metrics:nil
-                                                                               views:elementsDict]];
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[addButton(buttonWidth)]-|"
-                                                                             options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                             metrics:metrics
-                                                                               views:elementsDict]];
-    
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.deviceRangeLabel
-                                                                 attribute:NSLayoutAttributeLeft
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.deviceUUIDLabel
-                                                                 attribute:NSLayoutAttributeLeft
-                                                                multiplier:1.0
-                                                                  constant:0.0]];
 }
 
 
