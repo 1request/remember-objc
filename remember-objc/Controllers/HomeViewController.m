@@ -197,6 +197,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
         Location *location = [self.objectsInTable objectAtIndex:indexPath.row];
         locationCell.locationNameLabel.text = location.name;
         locationCell.active = (indexPath.row == self.selectedLocationRowNumber) ? YES : NO;
+        
         return locationCell;
     }
     else {
@@ -216,6 +217,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
         if ([self.cellsCurrentlyEditing containsObject:indexPath]) {
             [messageCell openCell];
         }
+        
         return messageCell;
     }
 }
