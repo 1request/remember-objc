@@ -29,11 +29,31 @@
     HomeViewController *homeViewController = (HomeViewController *)nav.topViewController;
     homeViewController.managedObjectContext = self.managedObjectContext;
     
+    UIApplication *app = [UIApplication sharedApplication];
+    if ([app respondsToSelector:@selector(registerForRemoteNotifications)]) {
+        UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+        [app registerUserNotificationSettings:settings];
+        [app registerForRemoteNotifications];
+    } else {
+        [app registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert];
+    }
+    
     [self monitorLocations];
     
     return YES;
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    [self clearNotifications];
+}
+
+- (void)clearNotifications
+{
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+}
 
 #pragma mark - Core Data stack
 

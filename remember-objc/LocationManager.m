@@ -119,6 +119,10 @@
         CLBeaconRegion *beaconRegion = (CLBeaconRegion *)region;
         if (beaconRegion.major && beaconRegion.minor) {
             [[NSNotificationCenter defaultCenter] postNotificationName:kEnteredBeaconNotificationName object:nil userInfo:@{@"region": region}];
+            // Check when to send notification
+            if ([self shouldSendNotification:(CLBeaconRegion *)region]) {
+                [self sendLocalNotificationWithMessage:[NSString stringWithFormat:@"New message from %@!", region.identifier]];
+            }
         }
     }
 }
@@ -145,6 +149,38 @@
         NSString *message = [NSString stringWithFormat:@"error: %@ / region: %@", [error description], beaconRegion.minor];
         NSLog(@"%@", message);
     }
+}
+
+#pragma mark - About Notification
+
+- (BOOL)shouldSendNotification:(CLBeaconRegion *)region
+{
+    return YES;
+}
+
+- (void)sendLocalNotificationWithMessage:(NSString *)message
+{
+    UILocalNotification *notification = [UILocalNotification new];
+    
+    // Notification details
+    notification.alertBody = message;
+    notification.alertAction = NSLocalizedString(@"View Details", nil);
+    notification.soundName = UILocalNotificationDefaultSoundName;
+    notification.applicationIconBadgeNumber = [[UIApplication sharedApplication] applicationIconBadgeNumber] + 1;
+    
+    if ([notification respondsToSelector:@selector(regionTriggersOnce)]) {
+        notification.regionTriggersOnce = YES;
+    }
+    
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        UIUserNotificationType types = UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
+        UIUserNotificationSettings *mySettings = [UIUserNotificationSettings settingsForTypes:types categories:nil] ;
+        [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
+    }
+    
+    NSLog(@"notification: %@", notification);
+    
+    [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
 }
 
 @end
