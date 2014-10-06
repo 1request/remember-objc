@@ -21,12 +21,12 @@ static NSString *const kSlideUpToCancel = @"Slide up to cancel";
 static NSString *const kReleaseToCancel = @"Release to cancel";
 static CGFloat const kMinimumRecordLength = 1.0f;
 
-@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, MessagesTableViewCellDelegate, NSFetchedResultsControllerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate>
+@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, MessagesTableViewCellDelegate, NSFetchedResultsControllerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *clickHereImageView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIButton *recordButton;
-@property (nonatomic) NSInteger selectedLocationRowNumber;
+@property (strong, nonatomic) NSManagedObjectID *selectedLocationObjectId;
 @property (nonatomic) NSInteger activePlayerRowNumber;
 @property (nonatomic) NSInteger editingCellRowNumber;
 @property (strong, nonatomic) HUD *hudView;
@@ -50,6 +50,17 @@ static CGFloat const kMinimumRecordLength = 1.0f;
         _objectsInTable = [NSMutableArray new];
     }
     return _objectsInTable;
+}
+
+- (NSManagedObjectID *)selectedLocationObjectId
+{
+    if (!_selectedLocationObjectId) {
+        Location *location = self.objectsInTable.firstObject;
+        if (location) {
+            _selectedLocationObjectId = location.objectID;
+        }
+    }
+    return _selectedLocationObjectId;
 }
 
 - (AVAudioRecorder *)recorder
@@ -136,8 +147,9 @@ static CGFloat const kMinimumRecordLength = 1.0f;
     }
     
     [self configureAVAudioSession];
-    
-    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapView:)]];
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapView:)];
+    tapRecognizer.delegate = self;
+    [self.view addGestureRecognizer:tapRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -191,7 +203,7 @@ static CGFloat const kMinimumRecordLength = 1.0f;
         locationCell.frame = cellRect;
         Location *location = [self.objectsInTable objectAtIndex:indexPath.row];
         locationCell.locationNameLabel.text = location.name;
-        locationCell.active = (indexPath.row == self.selectedLocationRowNumber) ? YES : NO;
+        locationCell.active = (location.objectID == self.selectedLocationObjectId) ? YES : NO;
         
         return locationCell;
     }
@@ -218,11 +230,14 @@ static CGFloat const kMinimumRecordLength = 1.0f;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if (indexPath.row == self.selectedLocationRowNumber) return;
-    if (indexPath.row != self.selectedLocationRowNumber && [cell isKindOfClass:[LocationsTableViewCell class]]) {
-        self.selectedLocationRowNumber = indexPath.row;
-        [self.tableView reloadData];
+    if ([[self.objectsInTable objectAtIndex:indexPath.row] isKindOfClass:[Location class]]) {
+        Location *location = [self.objectsInTable objectAtIndex:indexPath.row];
+        if (location.objectID == self.selectedLocationObjectId) return;
+        else {
+            self.selectedLocationObjectId = location.objectID;
+            [self.tableView reloadData];
+        }
+        if (self.editingCellRowNumber) [self closeEditingCell];
     }
 }
 
@@ -318,7 +333,7 @@ static CGFloat const kMinimumRecordLength = 1.0f;
             Message *message = [[Message alloc] initWithEntity:entity insertIntoManagedObjectContext:self.managedObjectContext];
             message.createdAt = createTime;
             message.updatedAt = createTime;
-            message.location = [self.objectsInTable objectAtIndex:self.selectedLocationRowNumber];
+            message.location = (Location *)[self.managedObjectContext objectWithID:self.selectedLocationObjectId];
             NSInteger count = [message.location.recordCounter integerValue] + 1;
             message.name = [NSString stringWithFormat:@"Record %zd", count];
             message.location.recordCounter = [NSNumber numberWithInteger:count];
@@ -384,7 +399,7 @@ static CGFloat const kMinimumRecordLength = 1.0f;
 - (void)closeEditingCell
 {
     MessagesTableViewCell *previousEditingCell = (MessagesTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.editingCellRowNumber inSection:0]];
-    [previousEditingCell closeCell:YES];
+    if (previousEditingCell) [previousEditingCell closeCell:YES];
 }
 
 - (void)tapView:(UITapGestureRecognizer *)recognizer
@@ -538,6 +553,16 @@ static CGFloat const kMinimumRecordLength = 1.0f;
 {
     self.activePlayerRowNumber = 0;
     [self.tableView reloadData];
+}
+
+#pragma mark - UIGestureRecognizer Delegate
+
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if ([touch.view isDescendantOfView:self.tableView]) {
+        return NO;
+    }
+    return YES;
 }
 
 @end
