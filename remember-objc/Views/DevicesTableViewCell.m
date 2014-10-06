@@ -32,21 +32,12 @@ static CGFloat const ButtonWidth = 80.0;
         
         NSDictionary *elementsDict = @{@"ibeaconImageView":self.ibeaconImageView, @"deviceUUIDLabel":self.deviceUUIDLabel, @"deviceRangeLabel":self.deviceRangeLabel, @"addButton":self.addButton};
         NSDictionary *metrics = @{@"buttonWidth":[NSNumber numberWithFloat:ButtonWidth]};
-        
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[ibeaconImageView]-|"
+
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[ibeaconImageView]-(8)-|"
                                                                                  options:NSLayoutFormatDirectionLeadingToTrailing
                                                                                  metrics:nil
                                                                                    views:elementsDict]];
         
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[deviceUUIDLabel]-[deviceRangeLabel]-|"
-                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                                 metrics:nil
-                                                                                   views:elementsDict]];
-        
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[addButton]-|"
-                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                                 metrics:nil
-                                                                                   views:elementsDict]];
         
         [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.ibeaconImageView
                                                                      attribute:NSLayoutAttributeWidth
@@ -56,12 +47,22 @@ static CGFloat const ButtonWidth = 80.0;
                                                                     multiplier:1.0
                                                                       constant:0.0]];
         
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[ibeaconImageView]-[deviceUUIDLabel]"
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(8)-[ibeaconImageView]-(8)-[deviceUUIDLabel]"
+                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                                 metrics:nil
+                                                                                   views:elementsDict]];
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[deviceUUIDLabel]-(8)-[deviceRangeLabel]-(8)-|"
+                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                                 metrics:nil
+                                                                                   views:elementsDict]];
+
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[addButton]-(8)-|"
                                                                                  options:NSLayoutFormatDirectionLeadingToTrailing
                                                                                  metrics:nil
                                                                                    views:elementsDict]];
         
-        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[addButton(buttonWidth)]-|"
+
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[addButton(buttonWidth)]-(8)-|"
                                                                                  options:NSLayoutFormatDirectionLeadingToTrailing
                                                                                  metrics:metrics
                                                                                    views:elementsDict]];
@@ -138,6 +139,7 @@ static CGFloat const ButtonWidth = 80.0;
 {
     if (!_ibeaconImageView) {
         _ibeaconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ibeacon"]];
+        _ibeaconImageView.contentMode = UIViewContentModeScaleAspectFit;
         _ibeaconImageView.translatesAutoresizingMaskIntoConstraints = NO;
     }
     return _ibeaconImageView;

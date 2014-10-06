@@ -73,7 +73,7 @@ static CGFloat const kBounceValue = 20.0f;
         NSDictionary *metrics = @{@"unreadSpotLeftSpacing":[NSNumber numberWithFloat:UnreadSpotSpacing
                                                             ], @"unreadSpotSize":[NSNumber numberWithFloat:UnreadSpotSize]};
         
-        [self.topView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[playerButton]-|"
+        [self.topView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[playerButton]-(8)-|"
                                                                              options:NSLayoutFormatDirectionLeadingToTrailing
                                                                              metrics:metrics
                                                                                views:elementsDict]];
@@ -86,7 +86,7 @@ static CGFloat const kBounceValue = 20.0f;
                                                                 multiplier:1.0
                                                                   constant:0.0]];
         
-        [self.topView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[messageNameLabel]-|"
+        [self.topView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[messageNameLabel]-(8)-|"
                                                                              options:NSLayoutFormatDirectionLeadingToTrailing
                                                                              metrics:nil
                                                                                views:elementsDict]];
@@ -104,7 +104,7 @@ static CGFloat const kBounceValue = 20.0f;
                                                                              metrics:metrics
                                                                                views:elementsDict]];
         
-        [self.topView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-unreadSpotLeftSpacing-[unreadSpotView(unreadSpotSize)]-unreadSpotLeftSpacing-[messageNameLabel]-[playerButton]-|"
+        [self.topView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-unreadSpotLeftSpacing-[unreadSpotView(unreadSpotSize)]-unreadSpotLeftSpacing-[messageNameLabel]-(8)-[playerButton]-(8)-|"
                                                                              options:NSLayoutFormatDirectionLeadingToTrailing
                                                                              metrics:metrics
                                                                                views:elementsDict]];

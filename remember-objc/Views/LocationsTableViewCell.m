@@ -29,6 +29,31 @@ static CGFloat const ButtonSize = 24.0;
     if (self) {
         [self.contentView addSubview:self.radioButton];
         [self.contentView addSubview:self.locationNameLabel];
+        
+        self.textLabel.translatesAutoresizingMaskIntoConstraints = NO;
+        NSDictionary *elementsDict = @{@"radioButton": self.radioButton, @"locationNameLabel": self.locationNameLabel};
+        NSDictionary *metrics = @{@"buttonSize": [NSNumber numberWithFloat:ButtonSize]};
+        [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.radioButton
+                                                                     attribute:NSLayoutAttributeCenterY
+                                                                     relatedBy:NSLayoutRelationEqual
+                                                                        toItem:self.contentView
+                                                                     attribute:NSLayoutAttributeCenterY
+                                                                    multiplier:1.0
+                                                                      constant:0.0]];
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[radioButton(buttonSize)]"
+                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                                 metrics:metrics
+                                                                                   views:elementsDict]];
+        
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(8)-[locationNameLabel]-(8)-|"
+                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                                 metrics:nil
+                                                                                   views:elementsDict]];
+        [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-(8)-[radioButton(buttonSize)]-(8)-[locationNameLabel]-(8)-|"
+                                                                                 options:NSLayoutFormatDirectionLeadingToTrailing
+                                                                                 metrics:metrics
+                                                                                   views:elementsDict]];
     }
     return self;
 }
@@ -36,30 +61,6 @@ static CGFloat const ButtonSize = 24.0;
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    self.textLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    NSDictionary *elementsDict = @{@"radioButton": self.radioButton, @"locationNameLabel": self.locationNameLabel};
-    NSDictionary *metrics = @{@"buttonSize": [NSNumber numberWithFloat:ButtonSize]};
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.radioButton
-                                                                 attribute:NSLayoutAttributeCenterY
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeCenterY
-                                                                multiplier:1.0
-                                                                  constant:0.0]];
-    
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[radioButton(buttonSize)]"
-                                                                             options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                             metrics:metrics
-                                                                               views:elementsDict]];
-
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[locationNameLabel]-|"
-                                                                             options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                             metrics:nil
-                                                                               views:elementsDict]];
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[radioButton(buttonSize)]-[locationNameLabel]-|"
-                                                                             options:NSLayoutFormatDirectionLeadingToTrailing
-                                                                             metrics:metrics
-                                                                               views:elementsDict]];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
