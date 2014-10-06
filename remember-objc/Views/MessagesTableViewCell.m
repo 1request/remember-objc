@@ -19,6 +19,7 @@ static CGFloat const kBounceValue = 20.0f;
 @property (strong, nonatomic) UIButton *deleteButton;
 @property (strong, nonatomic) UIView *topView;
 @property (strong, nonatomic) UIPanGestureRecognizer *panRecognizer;
+@property (strong, nonatomic) UITapGestureRecognizer *tapRecognizer;
 @property (assign, nonatomic) CGPoint panStartPoint;
 @property (assign, nonatomic) CGFloat startingRightLayoutConstraintConstant;
 @property (strong, nonatomic) NSLayoutConstraint *contentViewRightConstraint;
@@ -38,6 +39,9 @@ static CGFloat const kBounceValue = 20.0f;
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         self.panRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panThisCell:)];
         self.panRecognizer.delegate = self;
+        self.tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapTopView:)];
+        self.tapRecognizer.delegate = self;
+        [self.topView addGestureRecognizer:self.tapRecognizer];
         [self.topView addGestureRecognizer:self.panRecognizer];
         [self.contentView addSubview:self.topView];
         [self.topView addSubview:self.playerButton];
@@ -367,6 +371,11 @@ static CGFloat const kBounceValue = 20.0f;
     [self resetConstraintConstantsToZero:animated notifyDelegateDidClose:NO];
 }
 
+- (void)tapTopView:(UITapGestureRecognizer *)recognizer
+{
+    [self.delegate tappedTopView:self];
+}
+
 #pragma mark - UIGestureRecognizer Delegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
@@ -376,13 +385,16 @@ static CGFloat const kBounceValue = 20.0f;
 
 - (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    UIView *gestureView = [gestureRecognizer view];
-    CGPoint translation = [gestureRecognizer translationInView:[gestureView superview]];
-    
-    if (fabsf(translation.x) > fabsf(translation.y)) {
-        return YES;
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        UIView *gestureView = [gestureRecognizer view];
+        CGPoint translation = [gestureRecognizer translationInView:[gestureView superview]];
+        
+        if (fabsf(translation.x) > fabsf(translation.y)) {
+            return YES;
+        }
+        return NO;
     }
-    return NO;
+    return YES;
 }
 
 @end

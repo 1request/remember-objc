@@ -281,7 +281,9 @@ static CGFloat const kMinimumRecordLength = 1.0f;
     if (filteredLocations.count) {
         Location *location = filteredLocations.firstObject;
         location.updatedAt = [NSDate date];
+        self.selectedLocationObjectId = location.objectID;
         [self.managedObjectContext save:NULL];
+        [self.tableView reloadData];
     }
 }
 
@@ -408,19 +410,16 @@ static CGFloat const kMinimumRecordLength = 1.0f;
     self.editingCellRowNumber = 0;
 }
 
-#pragma mark - View components actions
-
-- (void)playerButtonClicked:(UIButton *)sender
+- (void)tappedMessageCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSIndexPath *triggeredCellIndexPath = [NSIndexPath indexPathForRow:sender.tag inSection:0];
-    NSArray *rowsToBeReloaded = (self.activePlayerRowNumber && self.activePlayerRowNumber != sender.tag) ? @[triggeredCellIndexPath, [NSIndexPath indexPathForRow:self.activePlayerRowNumber inSection:0]] : @[triggeredCellIndexPath];
+    NSArray *rowsToBeReloaded = (self.activePlayerRowNumber && self.activePlayerRowNumber != indexPath.row) ? @[indexPath, [NSIndexPath indexPathForRow:self.activePlayerRowNumber inSection:0]] : @[indexPath];
     
-    if (self.activePlayerRowNumber != sender.tag) {
+    if (self.activePlayerRowNumber != indexPath.row) {
         if (self.player.isPlaying) {
             [self.player stop];
             self.player = nil;
         }
-        self.activePlayerRowNumber = sender.tag;
+        self.activePlayerRowNumber = indexPath.row;
         [self playAudio];
         [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
     }
@@ -430,6 +429,15 @@ static CGFloat const kMinimumRecordLength = 1.0f;
         [self.tableView reloadRowsAtIndexPaths:rowsToBeReloaded withRowAnimation:UITableViewRowAnimationNone];
         [self.player stop];
     }
+}
+
+#pragma mark - View components actions
+
+- (void)playerButtonClicked:(UIButton *)sender
+{
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:sender.tag inSection:0];
+    
+    [self tappedMessageCellAtIndexPath:indexPath];
 }
 
 - (IBAction)recordButtonTouchedDown:(id)sender
@@ -494,6 +502,13 @@ static CGFloat const kMinimumRecordLength = 1.0f;
 - (void)cellDidClose:(UITableViewCell *)cell
 {
     self.editingCellRowNumber = 0;
+}
+
+- (void)tappedTopView:(UITableViewCell *)cell
+{
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    
+    [self tappedMessageCellAtIndexPath:indexPath];
 }
 
 #pragma mark - navigation
