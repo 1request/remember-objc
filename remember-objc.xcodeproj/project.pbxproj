@@ -412,6 +412,9 @@
 						CreatedOnToolsVersion = 6.0.1;
 						TestTargetID = 7C91085819D8F34300A7EC91;
 					};
+					D191369219E2CE4A00D4182A = {
+						DevelopmentTeam = 26P59ZGBPB;
+					};
 				};
 			};
 			buildConfigurationList = 7C91085419D8F34300A7EC91 /* Build configuration list for PBXProject "remember-objc" */;
@@ -865,7 +868,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "remember-objc-appstore";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "e5011255-8b41-4362-9b20-cae6e4151b2e";
 			};
 			name = Release;
 		};
