@@ -160,8 +160,6 @@
 			children = (
 				7C91086019D8F34300A7EC91 /* AppDelegate.h */,
 				7C91086119D8F34300A7EC91 /* AppDelegate.m */,
-				7C18C34D19E24F5000047916 /* AppDelegate+LocalNotification.h */,
-				7C18C34E19E24F5000047916 /* AppDelegate+LocalNotification.m */,
 				7CBE3B6119DD0AC000C25A54 /* LocationManager.h */,
 				7CBE3B6219DD0AC000C25A54 /* LocationManager.m */,
 				7CBE3B6719DD7FAD00C25A54 /* Constant.h */,
@@ -265,6 +263,8 @@
 		7CEECE1619DA58B500302CBA /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				7C18C34D19E24F5000047916 /* AppDelegate+LocalNotification.h */,
+				7C18C34E19E24F5000047916 /* AppDelegate+LocalNotification.m */,
 				7CEECE1819DA58E700302CBA /* UIColor+Extensions.h */,
 				7CEECE1919DA58E700302CBA /* UIColor+Extensions.m */,
 			);
