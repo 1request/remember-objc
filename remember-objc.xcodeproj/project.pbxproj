@@ -28,17 +28,18 @@
 		7CBE3B6319DD0AC000C25A54 /* LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B6219DD0AC000C25A54 /* LocationManager.m */; };
 		7CBE3B6919DD7FAD00C25A54 /* Constant.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B6819DD7FAD00C25A54 /* Constant.m */; };
 		7CBE3B6D19DD934800C25A54 /* Location+CLBeaconRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B6C19DD934800C25A54 /* Location+CLBeaconRegion.m */; };
-		7CC6278E19E2CABB00ABEF53 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC6278D19E2CABB00ABEF53 /* Location.m */; };
 		7CECFB1A19DE327C001884E5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7CECFB1919DE327C001884E5 /* AVFoundation.framework */; };
 		7CECFB2019DE4574001884E5 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CECFB1F19DE4574001884E5 /* Message.m */; };
 		7CEECE1A19DA58E700302CBA /* UIColor+Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEECE1919DA58E700302CBA /* UIColor+Extensions.m */; };
 		7CEECE2619DA96FA00302CBA /* UnreadSpotView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CEECE2519DA96FA00302CBA /* UnreadSpotView.m */; };
 		BC455FCD549950CEA0A94642 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7491236443D3E8A7E1AE64E /* libPods.a */; };
+		D17495E319E2D38400E62843 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = D17495E219E2D38400E62843 /* Location.m */; };
+		D17495E419E2D38400E62843 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = D17495E219E2D38400E62843 /* Location.m */; };
 		D191369519E2CE4A00D4182A /* DevicesTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9108D319D9240D00A7EC91 /* DevicesTableViewCell.m */; };
 		D191369619E2CE4A00D4182A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C91086119D8F34300A7EC91 /* AppDelegate.m */; };
 		D191369719E2CE4A00D4182A /* Location+CLBeaconRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE3B6C19DD934800C25A54 /* Location+CLBeaconRegion.m */; };
 		D191369819E2CE4A00D4182A /* RadioButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9108EB19D95F1B00A7EC91 /* RadioButton.m */; };
-		D191369919E2CE4A00D4182A /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CECFB1C19DE4573001884E5 /* Location.m */; };
+		D191369919E2CE4A00D4182A /* (null) in Sources */ = {isa = PBXBuildFile; };
 		D191369A19E2CE4A00D4182A /* AddDeviceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C9108D019D90D0500A7EC91 /* AddDeviceViewController.m */; };
 		D191369B19E2CE4A00D4182A /* remember_objc.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7C91086319D8F34300A7EC91 /* remember_objc.xcdatamodeld */; };
 		D191369C19E2CE4A00D4182A /* AppDelegate+LocalNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C18C34E19E24F5000047916 /* AppDelegate+LocalNotification.m */; };
@@ -118,8 +119,6 @@
 		7CBE3B6A19DD80A600C25A54 /* prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
 		7CBE3B6B19DD934800C25A54 /* Location+CLBeaconRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Location+CLBeaconRegion.h"; path = "models/Location+CLBeaconRegion.h"; sourceTree = "<group>"; };
 		7CBE3B6C19DD934800C25A54 /* Location+CLBeaconRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "Location+CLBeaconRegion.m"; path = "models/Location+CLBeaconRegion.m"; sourceTree = "<group>"; };
-		7CC6278C19E2CABB00ABEF53 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Location.h; path = models/Location.h; sourceTree = "<group>"; };
-		7CC6278D19E2CABB00ABEF53 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Location.m; path = models/Location.m; sourceTree = "<group>"; };
 		7CECFB1919DE327C001884E5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		7CECFB1E19DE4574001884E5 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = models/Message.h; sourceTree = "<group>"; };
 		7CECFB1F19DE4574001884E5 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = models/Message.m; sourceTree = "<group>"; };
@@ -127,6 +126,8 @@
 		7CEECE1919DA58E700302CBA /* UIColor+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIColor+Extensions.m"; path = "Categories/UIColor+Extensions.m"; sourceTree = "<group>"; };
 		7CEECE2419DA96FA00302CBA /* UnreadSpotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnreadSpotView.h; path = Views/UnreadSpotView.h; sourceTree = "<group>"; };
 		7CEECE2519DA96FA00302CBA /* UnreadSpotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UnreadSpotView.m; path = Views/UnreadSpotView.m; sourceTree = "<group>"; };
+		D17495E119E2D38400E62843 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Location.h; path = models/Location.h; sourceTree = "<group>"; };
+		D17495E219E2D38400E62843 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Location.m; path = models/Location.m; sourceTree = "<group>"; };
 		D19136B819E2CE4A00D4182A /* remember-objc-appstore.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "remember-objc-appstore.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D19136B919E2CE4A00D4182A /* remember-objc-appstore-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "remember-objc-appstore-Info.plist"; path = "/Users/harryng/Documents/workspace/ios/remember-objc/remember-objc-appstore-Info.plist"; sourceTree = "<absolute>"; };
 		D1F1F5E419DC60FB001D853F /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -270,8 +271,8 @@
 			isa = PBXGroup;
 			children = (
 				7C91086319D8F34300A7EC91 /* remember_objc.xcdatamodeld */,
-				7CC6278C19E2CABB00ABEF53 /* Location.h */,
-				7CC6278D19E2CABB00ABEF53 /* Location.m */,
+				D17495E119E2D38400E62843 /* Location.h */,
+				D17495E219E2D38400E62843 /* Location.m */,
 				7CECFB1E19DE4574001884E5 /* Message.h */,
 				7CECFB1F19DE4574001884E5 /* Message.m */,
 				7CBE3B6B19DD934800C25A54 /* Location+CLBeaconRegion.h */,
@@ -589,7 +590,7 @@
 				7C9108EC19D95F1B00A7EC91 /* RadioButton.m in Sources */,
 				7C9108D119D90D0500A7EC91 /* AddDeviceViewController.m in Sources */,
 				7C91086519D8F34300A7EC91 /* remember_objc.xcdatamodeld in Sources */,
-				7CC6278E19E2CABB00ABEF53 /* Location.m in Sources */,
+				D17495E319E2D38400E62843 /* Location.m in Sources */,
 				7C18C34F19E24F5000047916 /* AppDelegate+LocalNotification.m in Sources */,
 				7CEECE2619DA96FA00302CBA /* UnreadSpotView.m in Sources */,
 				7C9108DD19D92A0400A7EC91 /* MessagesTableViewCell.m in Sources */,
@@ -619,10 +620,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D191369519E2CE4A00D4182A /* DevicesTableViewCell.m in Sources */,
+				D17495E419E2D38400E62843 /* Location.m in Sources */,
 				D191369619E2CE4A00D4182A /* AppDelegate.m in Sources */,
 				D191369719E2CE4A00D4182A /* Location+CLBeaconRegion.m in Sources */,
 				D191369819E2CE4A00D4182A /* RadioButton.m in Sources */,
-				D191369919E2CE4A00D4182A /* Location.m in Sources */,
+				D191369919E2CE4A00D4182A /* (null) in Sources */,
 				D191369A19E2CE4A00D4182A /* AddDeviceViewController.m in Sources */,
 				D191369B19E2CE4A00D4182A /* remember_objc.xcdatamodeld in Sources */,
 				D191369C19E2CE4A00D4182A /* AppDelegate+LocalNotification.m in Sources */,
