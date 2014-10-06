@@ -33,4 +33,11 @@
     [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
 }
 
+- (void)clearNotifications
+{
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+}
+
+
 @end

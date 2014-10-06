@@ -13,6 +13,7 @@
 #import "LocationManager.h"
 #import "Location+CLBeaconRegion.h"
 #import "AppDelegate+LocalNotification.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface AppDelegate ()
 
@@ -53,10 +54,14 @@
     [self clearNotifications];
 }
 
-- (void)clearNotifications
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
-    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    [self clearNotifications];
+    UIApplicationState state = [application applicationState];
+    if (state == UIApplicationStateActive) {
+        AudioServicesPlayAlertSound(kSystemSoundID_Vibrate);
+        AudioServicesPlaySystemSound(1007);
+    }
 }
 
 #pragma mark - Core Data stack
