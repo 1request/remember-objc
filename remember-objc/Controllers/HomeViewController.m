@@ -27,7 +27,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 @property (weak, nonatomic) IBOutlet UIButton *recordButton;
 @property (nonatomic) NSInteger selectedLocationRowNumber;
 @property (nonatomic) NSInteger activePlayerRowNumber;
-@property (strong, nonatomic) NSMutableSet *cellsCurrentlyEditing;
+@property (nonatomic) NSInteger editingCellRowNumber;
 @property (strong, nonatomic) HUD *hudView;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultController;
 @property (strong, nonatomic) NSMutableArray *objectsInTable;
@@ -93,14 +93,6 @@ static NSString *const releaseToCancel = @"Release to cancel";
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-}
-
-- (NSMutableSet *)cellsCurrentlyEditing
-{
-    if (!_cellsCurrentlyEditing) {
-        _cellsCurrentlyEditing = [NSMutableSet new];
-    }
-    return _cellsCurrentlyEditing;
 }
 
 - (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
@@ -213,10 +205,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
         messageCell.playerStatus = (self.activePlayerRowNumber && self.activePlayerRowNumber == indexPath.row) ? Play : Pause;
         messageCell.playerButton.tag = indexPath.row;
         [messageCell.playerButton addTarget:self action:@selector(playerButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-        
-        if ([self.cellsCurrentlyEditing containsObject:indexPath]) {
-            [messageCell openCell];
-        }
+        if (indexPath.row == self.editingCellRowNumber) [messageCell openCell];
         
         return messageCell;
     }
@@ -468,12 +457,16 @@ static NSString *const releaseToCancel = @"Release to cancel";
 - (void)cellDidOpen:(UITableViewCell *)cell
 {
     NSIndexPath *currentEditingIndexPath = [self.tableView indexPathForCell:cell];
-    [self.cellsCurrentlyEditing addObject:currentEditingIndexPath];
+    if (self.editingCellRowNumber) {
+        MessagesTableViewCell *previousEditingCell = (MessagesTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.editingCellRowNumber inSection:0]];
+        [previousEditingCell closeCell:YES];
+    }
+    self.editingCellRowNumber = currentEditingIndexPath.row;
 }
 
 - (void)cellDidClose:(UITableViewCell *)cell
 {
-    [self.cellsCurrentlyEditing removeObject:[self.tableView indexPathForCell:cell]];
+    self.editingCellRowNumber = 0;
 }
 
 #pragma mark - navigation

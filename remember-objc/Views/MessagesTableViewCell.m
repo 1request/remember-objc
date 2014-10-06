@@ -362,6 +362,11 @@ static CGFloat const kBounceValue = 20.0f;
     [self setConstraintsToShowAllButtons:NO notifyDelegateDidOpen:NO];
 }
 
+- (void)closeCell:(BOOL)animated
+{
+    [self resetConstraintConstantsToZero:animated notifyDelegateDidClose:NO];
+}
+
 #pragma mark - UIGestureRecognizer Delegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
