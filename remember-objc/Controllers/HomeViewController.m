@@ -459,6 +459,7 @@ static CGFloat const kMinimumRecordLength = 1.0f;
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     Message *message = [self.objectsInTable objectAtIndex:indexPath.row];
     [self.managedObjectContext deleteObject:message];
+    self.editingCellRowNumber = 0;
     
     NSError *error = nil;
     
