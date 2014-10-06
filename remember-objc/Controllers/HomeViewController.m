@@ -17,8 +17,9 @@
 #import "Message.h"
 #import <AVFoundation/AVFoundation.h>
 
-static NSString *const slideUpToCancel = @"Slide up to cancel";
-static NSString *const releaseToCancel = @"Release to cancel";
+static NSString *const kSlideUpToCancel = @"Slide up to cancel";
+static NSString *const kReleaseToCancel = @"Release to cancel";
+static CGFloat const kMinimumRecordLength = 1.0f;
 
 @interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, MessagesTableViewCellDelegate, NSFetchedResultsControllerDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate>
 
@@ -303,7 +304,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 {
     [self stopRecordingAudio];
     
-    if (self.timeInterval > 2) {
+    if (self.timeInterval > kMinimumRecordLength) {
         if ([self fileExistsAtSystemWithFilePathString:@"memo.m4a"]) {
             NSDate *createTime = [NSDate date];
             NSArray *pathComponents = [NSArray arrayWithObjects:
@@ -420,7 +421,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 - (IBAction)recordButtonTouchedDown:(id)sender
 {
     self.hudView = [HUD hudInView:self.view];
-    self.hudView.text = slideUpToCancel;
+    self.hudView.text = kSlideUpToCancel;
     
     [self recordAudio];
 }
@@ -442,13 +443,13 @@ static NSString *const releaseToCancel = @"Release to cancel";
 
 - (IBAction)recordButtonTouchedDragExit:(id)sender
 {
-    self.hudView.text = releaseToCancel;
+    self.hudView.text = kReleaseToCancel;
     [self.hudView setNeedsDisplay];
 }
 
 - (IBAction)recordButtonTouchedDragEnter:(id)sender
 {
-    self.hudView.text = slideUpToCancel;
+    self.hudView.text = kSlideUpToCancel;
     [self.hudView setNeedsDisplay];
 }
 
