@@ -2,7 +2,7 @@
 //  Location.h
 //  remember-objc
 //
-//  Created by Joseph Cheung on 3/10/14.
+//  Created by Joseph Cheung on 6/10/14.
 //  Copyright (c) 2014 Reque.st. All rights reserved.
 //
 
@@ -14,12 +14,13 @@
 @interface Location : NSManagedObject
 
 @property (nonatomic, retain) NSDate * createdAt;
+@property (nonatomic, retain) NSDate * lastTriggerTime;
 @property (nonatomic, retain) NSNumber * major;
 @property (nonatomic, retain) NSNumber * minor;
 @property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSNumber * recordCounter;
 @property (nonatomic, retain) NSDate * updatedAt;
 @property (nonatomic, retain) NSString * uuid;
-@property (nonatomic, retain) NSNumber * recordCounter;
 @property (nonatomic, retain) NSSet *messages;
 @end
 
