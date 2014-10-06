@@ -135,6 +135,8 @@ static NSString *const releaseToCancel = @"Release to cancel";
     }
     
     [self configureAVAudioSession];
+    
+    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapView:)]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -379,6 +381,18 @@ static NSString *const releaseToCancel = @"Release to cancel";
     return [documentsPath stringByAppendingPathComponent:pathString];
 }
 
+- (void)closeEditingCell
+{
+    MessagesTableViewCell *previousEditingCell = (MessagesTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.editingCellRowNumber inSection:0]];
+    [previousEditingCell closeCell:YES];
+}
+
+- (void)tapView:(UITapGestureRecognizer *)recognizer
+{
+    if (self.editingCellRowNumber) [self closeEditingCell];
+    self.editingCellRowNumber = 0;
+}
+
 #pragma mark - View components actions
 
 - (void)playerButtonClicked:(UIButton *)sender
@@ -457,10 +471,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 - (void)cellDidOpen:(UITableViewCell *)cell
 {
     NSIndexPath *currentEditingIndexPath = [self.tableView indexPathForCell:cell];
-    if (self.editingCellRowNumber) {
-        MessagesTableViewCell *previousEditingCell = (MessagesTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.editingCellRowNumber inSection:0]];
-        [previousEditingCell closeCell:YES];
-    }
+    if (self.editingCellRowNumber) ([self closeEditingCell]);
     self.editingCellRowNumber = currentEditingIndexPath.row;
 }
 
