@@ -237,7 +237,6 @@ static CGFloat const kMinimumRecordLength = 1.0f;
             self.selectedLocationObjectId = location.objectID;
             [self.tableView reloadData];
         }
-        if (self.editingCellRowNumber) [self closeEditingCell];
     }
 }
 
@@ -402,12 +401,14 @@ static CGFloat const kMinimumRecordLength = 1.0f;
 {
     MessagesTableViewCell *previousEditingCell = (MessagesTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.editingCellRowNumber inSection:0]];
     if (previousEditingCell) [previousEditingCell closeCell:YES];
+    self.editingCellRowNumber = 0;
 }
 
 - (void)tapView:(UITapGestureRecognizer *)recognizer
 {
-    if (self.editingCellRowNumber) [self closeEditingCell];
-    self.editingCellRowNumber = 0;
+    // tap view (not table view)
+    NSLog(@"tapped view (not table view)");
+    [self closeEditingCell];
 }
 
 - (void)tappedMessageCellAtIndexPath:(NSIndexPath *)indexPath
@@ -442,10 +443,15 @@ static CGFloat const kMinimumRecordLength = 1.0f;
 
 - (IBAction)recordButtonTouchedDown:(id)sender
 {
-    self.hudView = [HUD hudInView:self.view];
-    self.hudView.text = kSlideUpToCancel;
-    
-    [self recordAudio];
+    if (self.editingCellRowNumber) {
+        [self closeEditingCell];
+    }
+    else {
+        self.hudView = [HUD hudInView:self.view];
+        self.hudView.text = kSlideUpToCancel;
+        
+        [self recordAudio];
+    }
 }
 
 - (IBAction)recordButtonTouchedUpInside:(id)sender
@@ -495,7 +501,6 @@ static CGFloat const kMinimumRecordLength = 1.0f;
 - (void)cellDidOpen:(UITableViewCell *)cell
 {
     NSIndexPath *currentEditingIndexPath = [self.tableView indexPathForCell:cell];
-    if (self.editingCellRowNumber) ([self closeEditingCell]);
     self.editingCellRowNumber = currentEditingIndexPath.row;
 }
 
@@ -506,9 +511,15 @@ static CGFloat const kMinimumRecordLength = 1.0f;
 
 - (void)tappedTopView:(UITableViewCell *)cell
 {
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    
-    [self tappedMessageCellAtIndexPath:indexPath];
+    NSLog(@"tapped cell top view");
+    if (self.editingCellRowNumber) {
+        [self closeEditingCell];
+    }
+    else {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        
+        [self tappedMessageCellAtIndexPath:indexPath];
+    }
 }
 
 #pragma mark - navigation
@@ -574,10 +585,10 @@ static CGFloat const kMinimumRecordLength = 1.0f;
 
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    if ([touch.view isDescendantOfView:self.tableView]) {
-        return NO;
+    if (self.editingCellRowNumber) {
+        return YES;
     }
-    return YES;
+    return NO;
 }
 
 @end
