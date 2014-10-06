@@ -260,7 +260,6 @@ static CGFloat const kMinimumRecordLength = 1.0f;
 
 - (void)enteredRegion:(NSNotification *)notification
 {
-    NSLog(@"entered region: %@", notification.userInfo);
     CLBeaconRegion *region = [notification.userInfo objectForKey:@"region"];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uuid == %@ AND major == %@ AND minor == %@", region.proximityUUID.UUIDString, region.major, region.minor];
     NSArray *filteredLocations = [[self.fetchedResultController fetchedObjects] filteredArrayUsingPredicate:predicate];
