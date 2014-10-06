@@ -281,7 +281,9 @@ static CGFloat const kMinimumRecordLength = 1.0f;
     if (filteredLocations.count) {
         Location *location = filteredLocations.firstObject;
         location.updatedAt = [NSDate date];
+        self.selectedLocationObjectId = location.objectID;
         [self.managedObjectContext save:NULL];
+        [self.tableView reloadData];
     }
 }
 
