@@ -371,8 +371,18 @@ static CGFloat const kBounceValue = 20.0f;
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    return YES;
+    return NO;
 }
 
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer
+{
+    UIView *gestureView = [gestureRecognizer view];
+    CGPoint translation = [gestureRecognizer translationInView:[gestureView superview]];
+    
+    if (fabsf(translation.x) > fabsf(translation.y)) {
+        return YES;
+    }
+    return NO;
+}
 
 @end
