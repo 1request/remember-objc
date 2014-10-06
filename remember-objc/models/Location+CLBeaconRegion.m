@@ -22,4 +22,21 @@
     return beaconRegion;
 }
 
++ (Location *)locationFromBeaconRegion:(CLBeaconRegion *)region InManagedObjectContext:(NSManagedObjectContext *)context
+{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Location"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"uuid == %@ AND major == %@ AND minor == %@", region.proximityUUID.UUIDString, region.major, region.minor];
+    request.predicate = predicate;
+    [request setRelationshipKeyPathsForPrefetching:@[@"messages"]];
+    NSError *error = nil;
+    NSArray *locations = [context executeFetchRequest:request error:&error];
+    
+    if (!error) {
+        if (locations.count) {
+            return locations.firstObject;
+        }
+    }
+    return nil;
+}
+
 @end

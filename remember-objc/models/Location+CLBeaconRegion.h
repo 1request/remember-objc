@@ -12,5 +12,5 @@
 @interface Location (CLBeaconRegion)
 
 - (CLBeaconRegion *)beaconRegion;
-
++ (Location *)locationFromBeaconRegion:(CLBeaconRegion *)region InManagedObjectContext:(NSManagedObjectContext *)context;
 @end

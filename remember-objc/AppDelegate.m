@@ -12,6 +12,8 @@
 #import "HomeViewController.h"
 #import "LocationManager.h"
 #import "Location+CLBeaconRegion.h"
+#import "AppDelegate+LocalNotification.h"
+
 @interface AppDelegate ()
 
 @end
@@ -38,6 +40,8 @@
     } else {
         [app registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enteredRegion:) name:kEnteredBeaconNotificationName object:nil];
     
     [self monitorLocations];
     
@@ -149,7 +153,17 @@
         }
         [[LocationManager sharedInstance] startMonitoringBeaconRegions:beaconRegions];
         [[LocationManager sharedInstance] startRangingBeaconRegions:beaconRegions];
-        NSLog(@"monitored regions: %@", [[LocationManager sharedInstance].manager monitoredRegions]);
+    }
+}
+
+- (void)enteredRegion:(NSNotification *)notification
+{
+    CLBeaconRegion *region = [notification.userInfo objectForKey:@"region"];
+    Location *location = [Location locationFromBeaconRegion:region InManagedObjectContext:self.managedObjectContext];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"read == nil"];
+    NSSet *unreadMessages = [location.messages filteredSetUsingPredicate:predicate];
+    if (unreadMessages.count) {
+        [self sendLocalNotificationWithMessage:[NSString stringWithFormat:@"%@ got %zd new notifications!", location.name, unreadMessages.count]];
     }
 }
 
