@@ -165,9 +165,16 @@
 {
     CLBeaconRegion *region = [notification.userInfo objectForKey:@"region"];
     Location *location = [Location locationFromBeaconRegion:region InManagedObjectContext:self.managedObjectContext];
+    NSDate *currentDate = [NSDate date];
+    NSTimeInterval currentTime = [currentDate timeIntervalSince1970];
+    NSTimeInterval previousTriggeredTime = [location.lastTriggerTime timeIntervalSince1970];
+    location.updatedAt = currentDate;
+    location.lastTriggerTime = currentDate;
+    NSError *error = nil;
+    [self.managedObjectContext save:&error];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"read == nil"];
     NSSet *unreadMessages = [location.messages filteredSetUsingPredicate:predicate];
-    if (unreadMessages.count) {
+    if (unreadMessages.count && currentTime - previousTriggeredTime >= 3600) {
         [self sendLocalNotificationWithMessage:[NSString stringWithFormat:@"%@ got %zd new notifications!", location.name, unreadMessages.count]];
     }
 }
