@@ -498,6 +498,13 @@ static CGFloat const kMinimumRecordLength = 1.0f;
     }
 }
 
+- (void)cellWillOpen:(UITableViewCell *)cell
+{
+    if (self.editingCellRowNumber) {
+        [self closeEditingCell];
+    }
+}
+
 - (void)cellDidOpen:(UITableViewCell *)cell
 {
     NSIndexPath *currentEditingIndexPath = [self.tableView indexPathForCell:cell];

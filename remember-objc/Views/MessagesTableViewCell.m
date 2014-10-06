@@ -221,6 +221,7 @@ static CGFloat const kBounceValue = 20.0f;
         case UIGestureRecognizerStateBegan:
             self.panStartPoint = [recognizer translationInView:self.topView];
             self.startingRightLayoutConstraintConstant = self.contentViewRightConstraint.constant;
+            [self.delegate cellWillOpen:self];
             break;
         case UIGestureRecognizerStateChanged: {
             CGPoint currentPoint = [recognizer translationInView:self.topView];
