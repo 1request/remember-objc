@@ -146,7 +146,7 @@ static CGFloat const kBounceValue = 20.0f;
         default:
             break;
     }
-    if (self.read) self.unreadSpotView.hidden = YES;
+    self.unreadSpotView.hidden = (self.read) ? YES : NO;
 }
 
 - (void)prepareForReuse
@@ -362,12 +362,27 @@ static CGFloat const kBounceValue = 20.0f;
     [self setConstraintsToShowAllButtons:NO notifyDelegateDidOpen:NO];
 }
 
+- (void)closeCell:(BOOL)animated
+{
+    [self resetConstraintConstantsToZero:animated notifyDelegateDidClose:NO];
+}
+
 #pragma mark - UIGestureRecognizer Delegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    return YES;
+    return NO;
 }
 
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer
+{
+    UIView *gestureView = [gestureRecognizer view];
+    CGPoint translation = [gestureRecognizer translationInView:[gestureView superview]];
+    
+    if (fabsf(translation.x) > fabsf(translation.y)) {
+        return YES;
+    }
+    return NO;
+}
 
 @end

@@ -27,7 +27,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
 @property (weak, nonatomic) IBOutlet UIButton *recordButton;
 @property (nonatomic) NSInteger selectedLocationRowNumber;
 @property (nonatomic) NSInteger activePlayerRowNumber;
-@property (strong, nonatomic) NSMutableSet *cellsCurrentlyEditing;
+@property (nonatomic) NSInteger editingCellRowNumber;
 @property (strong, nonatomic) HUD *hudView;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultController;
 @property (strong, nonatomic) NSMutableArray *objectsInTable;
@@ -95,14 +95,6 @@ static NSString *const releaseToCancel = @"Release to cancel";
     _tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
 }
 
-- (NSMutableSet *)cellsCurrentlyEditing
-{
-    if (!_cellsCurrentlyEditing) {
-        _cellsCurrentlyEditing = [NSMutableSet new];
-    }
-    return _cellsCurrentlyEditing;
-}
-
 - (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
     _managedObjectContext = managedObjectContext;
@@ -143,6 +135,8 @@ static NSString *const releaseToCancel = @"Release to cancel";
     }
     
     [self configureAVAudioSession];
+    
+    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapView:)]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -197,6 +191,7 @@ static NSString *const releaseToCancel = @"Release to cancel";
         Location *location = [self.objectsInTable objectAtIndex:indexPath.row];
         locationCell.locationNameLabel.text = location.name;
         locationCell.active = (indexPath.row == self.selectedLocationRowNumber) ? YES : NO;
+        
         return locationCell;
     }
     else {
@@ -212,10 +207,8 @@ static NSString *const releaseToCancel = @"Release to cancel";
         messageCell.playerStatus = (self.activePlayerRowNumber && self.activePlayerRowNumber == indexPath.row) ? Play : Pause;
         messageCell.playerButton.tag = indexPath.row;
         [messageCell.playerButton addTarget:self action:@selector(playerButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        if (indexPath.row == self.editingCellRowNumber) [messageCell openCell];
         
-        if ([self.cellsCurrentlyEditing containsObject:indexPath]) {
-            [messageCell openCell];
-        }
         return messageCell;
     }
 }
@@ -388,6 +381,18 @@ static NSString *const releaseToCancel = @"Release to cancel";
     return [documentsPath stringByAppendingPathComponent:pathString];
 }
 
+- (void)closeEditingCell
+{
+    MessagesTableViewCell *previousEditingCell = (MessagesTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.editingCellRowNumber inSection:0]];
+    [previousEditingCell closeCell:YES];
+}
+
+- (void)tapView:(UITapGestureRecognizer *)recognizer
+{
+    if (self.editingCellRowNumber) [self closeEditingCell];
+    self.editingCellRowNumber = 0;
+}
+
 #pragma mark - View components actions
 
 - (void)playerButtonClicked:(UIButton *)sender
@@ -466,12 +471,13 @@ static NSString *const releaseToCancel = @"Release to cancel";
 - (void)cellDidOpen:(UITableViewCell *)cell
 {
     NSIndexPath *currentEditingIndexPath = [self.tableView indexPathForCell:cell];
-    [self.cellsCurrentlyEditing addObject:currentEditingIndexPath];
+    if (self.editingCellRowNumber) ([self closeEditingCell]);
+    self.editingCellRowNumber = currentEditingIndexPath.row;
 }
 
 - (void)cellDidClose:(UITableViewCell *)cell
 {
-    [self.cellsCurrentlyEditing removeObject:[self.tableView indexPathForCell:cell]];
+    self.editingCellRowNumber = 0;
 }
 
 #pragma mark - navigation

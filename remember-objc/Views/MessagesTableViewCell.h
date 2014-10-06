@@ -29,4 +29,5 @@ typedef NS_ENUM(NSUInteger, PlayerStatus) {
 @property PlayerStatus playerStatus;
 @property (strong, nonatomic) UIButton *playerButton;
 - (void)openCell;
+- (void)closeCell:(BOOL)animated;
 @end
