@@ -255,8 +255,9 @@ static NSString *const releaseToCancel = @"Release to cancel";
     NSArray *fetchedLocations = [self.fetchedResultController fetchedObjects];
     for (Location *location in fetchedLocations) {
         [self.objectsInTable addObject:location];
-        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:YES];
-        NSArray *sortedMessages = [location.messages sortedArrayUsingDescriptors:@[sortDescriptor]];
+        NSSortDescriptor *sortUnread = [NSSortDescriptor sortDescriptorWithKey:@"read" ascending:YES];
+        NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"createdAt" ascending:NO];
+        NSArray *sortedMessages = [location.messages sortedArrayUsingDescriptors:@[sortUnread, sortDescriptor]];
         for (Message *message in sortedMessages) {
             [self.objectsInTable addObject:message];
         }
